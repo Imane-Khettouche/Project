@@ -1,0 +1,18 @@
+pages/
+├── Landing/            # Public landing page
+│   ├── Landing.js       # Main landing page component
+│   └── Landing.css      # Styles for the landing page
+├── Auth/               # Authentication-related pages
+│   ├── Login.js         # User login page
+│   ├── Register.js      # User registration page
+│   └── Auth.css         # Common styles for auth pages
+├── Dashboard/          # User dashboard pages
+│   ├── Dashboard.js     # Main dashboard component
+│   ├── Profile.js       # User profile page
+│   ├── Settings.js      # User settings page
+│   └── Dashboard.css    # Styles for the dashboard
+├── AdminDashboard/     # Admin dashboard pages (optional)
+│   ├── AdminDashboard.js # Main admin dashboard component
+│   ├── Users.js         # User management page
+│   └── AdminDashboard.css # Admin-specific styles
+└── NotFound.js         # 404 Page Not Found
