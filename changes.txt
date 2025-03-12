@@ -1,0 +1,5 @@
+🔁 Future Updates (Pushing New Changes)
+Whenever you make changes, update GitHub with:
+git add .
+git commit -m "Update landing page"
+git push

@@ -9,10 +9,10 @@ function Header() {
       <nav>
         <ul className="nav-links">
           <li><a href="#home">Home</a></li>
-          <li><a href="#challenges">Challenges</a></li>
-          <li><a href="#leaderboard">Leaderboard</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#challenges">About </a></li>
+          <li><a href="#leaderboard">Features</a></li>
+          <li><a href="#about">Problems & Solutions</a></li>
+          <li><a href="#contact">FAQs</a></li>
           {isLoggedIn ? (
             <>
               <li><a href="#profile">Profile</a></li>
