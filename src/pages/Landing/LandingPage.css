@@ -75,3 +75,23 @@ a {
 ul {
   list-style: none;
 }
+.featuresList {
+  display: flex;
+  justify-content: space-between;
+}
+.benefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.benefit {
+  width: 20rem;
+  margin: 0.5rem;
+  padding: 0.25rem;
+  border: 0.1rem solid;
+  border-radius: 2rem;
+  text-align: center;
+}
+summary {
+  font-size: 2rem;
+}
