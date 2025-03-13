@@ -41,3 +41,37 @@ p {
   transform: scale(1.05);
   background-color: #ffe0d3;
 }
+.homeSection {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  border-radius: 50px;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem;
+}
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+li {
+  padding: 0.5rem;
+}
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
