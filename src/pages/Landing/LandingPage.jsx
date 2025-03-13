@@ -212,31 +212,7 @@ function FAQs() {
   );
 }
 function Footer() {
-  return (
-    <footer style="background-color: #333; color: #fff; padding: 20px; text-align: center; margin-top: 20px;">
-      <p>&copy; 2025 Challenge Platform. All rights reserved.</p>
-      <p>
-        Follow us on:
-        <a href="#" style="color: #fff; margin: 0 8px;">
-          Facebook
-        </a>{" "}
-        |
-        <a href="#" style="color: #fff; margin: 0 8px;">
-          Twitter
-        </a>{" "}
-        |
-        <a href="#" style="color: #fff; margin: 0 8px;">
-          LinkedIn
-        </a>
-      </p>
-      <p>
-        Contact us at:{" "}
-        <a href="mailto:support@challengeplatform.com" style="color: #fff;">
-          support@challengeplatform.com
-        </a>
-      </p>
-    </footer>
-  );
+  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 }
 export default function LandingPage() {
   return (

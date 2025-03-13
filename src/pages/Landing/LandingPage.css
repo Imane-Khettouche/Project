@@ -1,3 +1,4 @@
+@import "tailwindcss";
 /* LandingPage.css */
 .landing-container {
   display: flex;
