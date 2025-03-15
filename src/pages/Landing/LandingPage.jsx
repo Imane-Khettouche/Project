@@ -1,5 +1,6 @@
 import "./LandingPage.css";
 import mainPh from "./img/illustration-1.webp";
+import {Link} from "react-router-dom";
 function Header() {
   return (
     <header className="navbar">
@@ -23,10 +24,9 @@ function Header() {
           </li>
 
           <li>
-            <a href="#login">Login</a>
-          </li>
-          <li>
-            <a href="#signup">Sign Up</a>
+            <Link to="./Auth" className="btn-start">
+              Login
+            </Link>
           </li>
         </ul>
       </nav>
@@ -212,7 +212,20 @@ function FAQs() {
   );
 }
 function Footer() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <footer>
+      <p>&copy; 2025 Challenge Platform. All rights reserved.</p>
+      <p>
+        Follow us on:
+        <a href="#">Facebook</a> |<a href="#">Twitter</a> |
+        <a href="#">LinkedIn</a>
+      </p>
+      <p>
+        Contact us at:
+        <a>support@challengeplatform.com</a>
+      </p>
+    </footer>
+  );
 }
 export default function LandingPage() {
   return (

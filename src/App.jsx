@@ -1,11 +1,14 @@
+import Auth from "./pages/Login/Auth.jsx";
 import LandingPage from "./pages/Landing/LandingPage.jsx";
-import Login from "./pages/Login/LoginPage.jsx";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {path: "/", element: <LandingPage />},
+  {path: "/Auth", element: <Auth />},
+]);
+
 function App() {
-  return (
-    <>
-      <LandingPage />
-<Login/>    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
