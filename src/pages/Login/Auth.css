@@ -1,5 +1,4 @@
 body {
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,11 +6,13 @@ body {
   width: 100%;
   padding: 0 10px;
   font-family: sans-serif;
+  background-image: url(/src/pages/Login/Untitled.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.login {
+.login,
+.signup {
   width: 90%;
   height: 90%;
   display: grid;
@@ -27,6 +28,7 @@ body {
 }
 .welcome {
   position: relative;
+  background-color: #7c3aed;
 }
 .welcome-container {
   position: absolute;
@@ -35,24 +37,45 @@ body {
   transform: translate(-50%, -50%);
 }
 .welcome h1 {
-  font-size: 4rem;
+  font-size: 2.5rem;
   color: white;
 }
 .welcome p {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: white;
 }
+.btn-signup {
+  color: #7c3aed;
+  background: #fff;
+  border: 1px solid #fff;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 100%;
+}
+
+.btn-signup:hover {
+  background: #7c3aed;
+  color: white;
+  transform: scale(1.05);
+}
+
 .container {
   display: grid;
   border-radius: 0 3rem 3rem 0;
   backdrop-filter: blur(1rem);
   padding: 2rem;
+  font-size: 1.2rem;
   color: #000;
   background: #fff;
 }
 .container h1 {
   letter-spacing: 1px;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #7c3aed;
 }
 .input {
   position: relative;
@@ -71,7 +94,7 @@ body {
 .input input {
   width: 100%;
   height: 2.5rem;
-  background: transparent;
+  background: #7c3aed0c;
   border: none;
   outline: none;
   font-size: 16px;
@@ -86,7 +109,7 @@ body {
   transform: translateY(-150%);
 }
 button {
-  background-color: #a1b5c9;
+  background-color: #7c3aed;
   color: #fff;
   font-weight: 600;
   border: none;
@@ -96,13 +119,8 @@ button {
   font-size: 16px;
   border: 2px solid transparent;
   transition: all 0.3s ease;
+  align-items: center;
 }
-button:hover {
-  color: #506a84;
-  background: #dce9f5;
-}
-.btn-signup {
-  color: #fff;
-  background: transparent;
-  border: 1px solid #fff;
+.a-login {
+  color: #7c3aed;
 }

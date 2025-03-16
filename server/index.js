@@ -11,7 +11,7 @@ mongoose
   .connect("mongodb://localhost:27017/Projet")
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Connection failed", err));
-app.post("/Auth", (req, res) => {
+app.post("/Signup", (req, res) => {
   const {name, email, password} = req.body;
   UserModel.create({name, email, password})
     .then((user) => res.json(user))

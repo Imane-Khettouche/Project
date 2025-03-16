@@ -24,7 +24,7 @@ function Header() {
           </li>
 
           <li>
-            <Link to="./Auth" className="btn-start">
+            <Link to="./Login" className="btn-start">
               Login
             </Link>
           </li>
@@ -100,62 +100,71 @@ function Features() {
 function P_S() {
   return (
     <section className="P_S">
-      <h1>Problems & Solutions</h1>
-      <div className="content">
-        <h3>
-          As an IT student, one of the biggest challenges is knowing how and
-          where to start practicing problem-solving skills. With countless
-          resources available, it’s easy to feel lost and unsure about which
-          challenges to focus on first. This uncertainty can make the journey
-          feel overwhelming and discouraging
-        </h3>
-        <p>
-          Imagine trying to master sorting algorithms like QuickSort or tackle
-          complex graph problems without a clear path or guidance. You might
-          spend hours searching for suitable challenges, only to end up feeling
-          more confused than before
-        </p>
-        <p>
-          Our platform takes the guesswork out of practice by offering guided
-          challenges, interactive visualizations, and real-time feedback.
-          Whether you’re starting with basic algorithms or advancing to dynamic
-          programming, we help you build confidence step by step while tracking
-          your progress effectively!
-        </p>
+      <div className="PSS">
+        {" "}
+        <h1>Problems & Solutions</h1>
+        <div className="content">
+          <h3>
+            As an IT student, one of the biggest challenges is knowing how and
+            where to start practicing problem-solving skills. With countless
+            resources available, it’s easy to feel lost and unsure about which
+            challenges to focus on first. This uncertainty can make the journey
+            feel overwhelming and discouraging
+          </h3>
+          <p>
+            Imagine trying to master sorting algorithms like QuickSort or tackle
+            complex graph problems without a clear path or guidance. You might
+            spend hours searching for suitable challenges, only to end up
+            feeling more confused than before
+          </p>
+          <p>
+            Our platform takes the guesswork out of practice by offering guided
+            challenges, interactive visualizations, and real-time feedback.
+            Whether you’re starting with basic algorithms or advancing to
+            dynamic programming, we help you build confidence step by step while
+            tracking your progress effectively!
+          </p>
+        </div>
       </div>
-      <h1>Benifits</h1>
-      <div className="benefits">
-        <span className="benefit">
-          <h2>Interactive Learning</h2>
-          <p>Real-time code execution and visual feedback</p>
-        </span>
-        <span className="benefit">
-          <h2>Progress Tracking</h2>
-          <p>Personalized dashboards and performance analytics</p>
-        </span>
-        <span className="benefit">
-          <h2>Skill-Based Challenges</h2>
-          <p>Categorized problem sets with difficulty levels</p>
-        </span>
-        <span className="benefit">
-          <h2>Community Support</h2>
-          <p> Integrated discussion forums and community interactions</p>
-        </span>
-        <span className="benefit">
-          <h2>Custom Challenge Creation</h2>
-          <p> Challenge builder tool with customization options</p>
-        </span>
-        <span className="benefit">
-          <h2>Expert Guidance</h2>
-          <p>Access to curated tutorials and expert tips</p>
-        </span>
+      <div className="beneS">
+        <h1>Benefits</h1>
+        <div className="benefits">
+          <div className="bene">
+            <span className="benefit">
+              <h2>Interactive Learning</h2>
+              <p>Real-time code execution and visual feedback</p>
+            </span>
+            <span className="benefit">
+              <h2>Progress Tracking</h2>
+              <p>Personalized dashboards and performance analytics</p>
+            </span>
+            <span className="benefit">
+              <h2>Skill-Based Challenges</h2>
+              <p>Categorized problem sets with difficulty levels</p>
+            </span>
+          </div>
+          <div className="bene">
+            <span className="benefit">
+              <h2>Community Support</h2>
+              <p> Integrated discussion forums and community interactions</p>
+            </span>
+            <span className="benefit">
+              <h2>Custom Challenge Creation</h2>
+              <p> Challenge builder tool with customization options</p>
+            </span>
+            <span className="benefit">
+              <h2>Expert Guidance</h2>
+              <p>Access to curated tutorials and expert tips</p>
+            </span>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 function FAQs() {
   return (
-    <section>
+    <section className="FAQs">
       <h1>FAQs</h1>
       <div className="ques">
         <details>

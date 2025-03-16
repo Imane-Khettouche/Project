@@ -6,26 +6,29 @@
 }
 
 body {
-  line-height: 1.6;
+  background-color: #f2f3f5;
+  color: #2c2f33;
 }
 
 a {
   text-decoration: none;
-
+  color: #000;
   transition: 0.3s;
 }
 
 a:hover {
+  border-bottom: 0.15rem solid #7c3aed;
 }
 
 .navbar {
+  background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-
+  color: #7c3aed;
   border-radius: 16px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 8px 20px #7c3aed2a;
   position: sticky;
   top: 20px;
   margin: 0 auto;
@@ -42,12 +45,10 @@ a:hover {
 
 .nav-links li a {
   text-decoration: none;
-
+  transition: color 0.3s;
   font-weight: 600;
 }
 
-.nav-links li a:hover {
-}
 .logo {
   font-family: "PT Serif", serif;
   font-size: 2rem;
@@ -55,7 +56,9 @@ a:hover {
   font-weight: 900px;
 }
 
-.btn-get-started {
+.btn-start {
+  background-color: #7c3aed;
+  color: #fff;
   padding: 12px 24px;
   border: none;
   border-radius: 30px;
@@ -63,7 +66,11 @@ a:hover {
   cursor: pointer;
 }
 
-.btn-get-started:hover {
+.btn-start:hover {
+  color: #7c3aed;
+  background-color: #fff;
+  border: none;
+  box-shadow: 0px 8px 20px #7c3aed2a;
 }
 
 .homeSection {
@@ -71,7 +78,7 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   padding: 80px 50px;
-
+  background-color: #fff;
   overflow: hidden;
 }
 
@@ -120,7 +127,7 @@ a:hover {
 
 .context h1 {
   font-family: "PT Serif", serif;
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin-bottom: 20px;
   position: relative;
   line-height: 1.4;
@@ -234,6 +241,7 @@ a:hover {
 .AboutS .content {
   flex: 1;
   padding-right: 40px;
+  text-align: center;
 
   opacity: 0;
   animation: fadeInLeft 1s ease forwards;
@@ -242,10 +250,10 @@ a:hover {
 
 .AboutS h1 {
   font-family: "PT Serif", serif;
-  font-size: 2.2rem;
-
+  font-size: 2.5rem;
   margin-bottom: 20px;
   position: relative;
+  color: #7c3aed;
 
   opacity: 0;
   animation: zoomIn 0.8s ease forwards;
@@ -264,7 +272,7 @@ a:hover {
 
 .AboutS p {
   font-family: "Nunito", sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   margin-bottom: 15px;
 
   opacity: 0;
@@ -312,14 +320,17 @@ a:hover {
 }
 
 .FeaturesS {
+  background-color: #fff;
+  margin-top: 1rem;
   padding: 80px 50px;
+  font-size: 1.5rem;
 }
 
 .FeaturesS h1 {
   font-family: "PT Serif", serif;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   text-align: center;
-
+  color: #7c3aed;
   margin-bottom: 50px;
   position: relative;
 }
@@ -352,15 +363,13 @@ a:hover {
 .leftF li,
 .rightF li {
   padding: 15px 20px;
-  border-left: 5px solid;
+  border-left: 5px solid #7c3aed;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .P_S {
   padding: 80px 50px;
-}
-.P_S {
-  display: flex;
+  display: grid;
   align-items: center;
   justify-content: space-between;
   padding: 80px 50px;
@@ -375,10 +384,11 @@ a:hover {
 
 .P_S h1 {
   font-family: "PT Serif", serif;
-  font-size: 2.2rem;
-
+  font-size: 2.5rem;
+  color: #7c3aed;
   margin-bottom: 20px;
   position: relative;
+  text-align: center;
 }
 
 .P_S h1::after {
@@ -392,59 +402,67 @@ a:hover {
 }
 
 .P_S h3 {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 
   margin-bottom: 20px;
 }
 .P_S p {
   font-family: "Nunito", sans-serif;
-  font-size: 14px;
+  font-size: 1.2rem;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-
-.ques {
-  padding: 80px 50px;
+.beneS {
+  background-color: #fff;
+  margin-top: 1rem;
+  padding: 2rem;
+  margin: 2rem;
 }
-
-.ques h1 {
+.benefits {
+  display: grid;
+}
+.bene {
+  display: flex;
+}
+.benefit {
+  border: 1px solid #7c3aed;
+  box-shadow: 8px 8px 8px #7c3aed2a;
+  padding: 1rem;
+  margin: 1rem;
+  width: 20rem;
+  height: 10rem;
+}
+.FAQs {
+  margin: 2rem;
+}
+.FAQs h1 {
   font-family: "PT Serif", serif;
-  font-size: 2.2rem;
-
+  font-size: 2.5rem;
+  color: #7c3aed;
   text-align: center;
-  margin-bottom: 50px;
-  position: relative;
-}
-
-.ques h1::after {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 4px;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .ques summary {
   font-family: "Nunito", sans-serif;
-
+  font-size: 1.5rem;
   font-weight: 600;
-  cursor: pointer;
+  cursor: pointer;padding: 1rem;
 }
-
+.ques p {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.2rem;
+}
 footer {
   font-family: "PT Serif", serif;
-
+  background-color: #7c3aed;
   padding: 30px 50px;
   text-align: center;
+  color: #fff;
+  font-size: 1.1rem;
 }
 
 footer a {
   font-family: "Nunito", sans-serif;
-
+  color: #fff;
   margin: 0 8px;
-}
-
-footer a:hover {
 }

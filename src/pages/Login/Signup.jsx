@@ -1,38 +1,8 @@
 import "./Auth.css";
 import {useState} from "react";
 import axios from "axios";
-function Login() {
-  return (
-    <div className="login">
-      <div className="welcome">
-        <div className="welcome-container">
-          <h1>Welcome Back</h1>
-          <p>You don&apos;t have an account? </p>
-          <button className="btn-signup">SignUP</button>
-        </div>
-      </div>
-      <div className="container">
-        <h1>Login</h1>
-        <p>Welcome back! Please login your account</p>
-        <form>
-          <div className="input">
-            <input type="email" className="emailInput" />
-            <label>Enter your email</label>
-          </div>
+import {Link} from "react-router-dom";
 
-          <div className="input">
-            <input type="password" className="pswInput" />
-            <label>Enter your password</label>
-          </div>
-          <button type="submit"> Login</button>
-        </form>
-        <p>
-          Forget your password? <a>Reset password</a>{" "}
-        </p>
-      </div>
-    </div>
-  );
-}
 function Signup() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
@@ -41,14 +11,23 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/Auth", {name, email, password})
+      .post("http://localhost:27017/Signup", {name, email, password})
       .then((result) => console.log(result))
       .catch((err) => console.log(err));
   };
 
   return (
     <div className="signup">
-      <div className="image-container"></div>
+      {" "}
+      <div className="welcome">
+        <div className="welcome-container">
+          <h1>Hi! Are you ready for new experience?</h1>
+          <p>You don&apos;t have an account? </p>
+          <Link to="/Login" className="btn-signup">
+            Login
+          </Link>
+        </div>
+      </div>
       <div className="container">
         <h1>Sign Up</h1>
         <p>Create your account</p>
@@ -90,18 +69,14 @@ function Signup() {
           </div>
           <button type="submit">Sign Up</button>
           <p>
-            Already have an account? <a href="#">Log in</a>
+            Already have an account?{" "}
+            <Link to="/Login" className="a-login">
+              Login
+            </Link>
           </p>
         </form>
       </div>
     </div>
   );
 }
-export default function Auth() {
-  return (
-    <>
-      <Login />
-      <Signup />
-    </>
-  );
-}
+export default Signup;
