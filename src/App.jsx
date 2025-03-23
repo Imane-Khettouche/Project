@@ -1,3 +1,4 @@
+
 import Login from "./pages/Login/Login.jsx";
 import Signup from "./pages/Login/Signup.jsx"
 import LandingPage from "./pages/Landing/LandingPage.jsx";
@@ -8,6 +9,8 @@ const router = createBrowserRouter([
   {path: "/Login", element: <Login />},
 {path: "/Signup", element: <Signup />},
 ]);
+//<RouterProvider router={router} />
+//import Dashboard from "./pages/Dashboard/Dashboard.jsx"
 
 function App() {
   return <RouterProvider router={router} />;

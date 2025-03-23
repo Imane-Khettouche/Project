@@ -12,10 +12,19 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Connection failed", err));
 app.post("/Signup", (req, res) => {
-  const {name, email, password} = req.body;
-  UserModel.create({name, email, password})
-    .then((user) => res.json(user))
-    .catch((err) => res.json(err));
+  console.log("Signup endpoint hit");
+  const { name, email, password } = req.body;
+  console.log("Received data:", { name, email, password });
+
+  UserModel.create({ name, email, password })
+    .then((user) => {
+      console.log("User created:", user);
+      res.json({ message: "User created", user });
+    })
+    .catch((err) => {
+      console.error("Error creating user:", err);
+      res.status(500).json({ error: err.message });
+    });
 });
 
 app.listen(3001, () => {
