@@ -6,19 +6,20 @@ function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state
-  const [role, setRole] = useState("Student");
-  const [error, setError] = useState(""); // Error handling
-  const navigate = useNavigate(); // For redirection
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Password confirmation check
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
+
+    setLoading(true);
 
     try {
       const response = await axios.post("http://localhost:5000/signup", {
@@ -29,18 +30,25 @@ function Signup() {
       });
       console.log(response.data);
 
-      // Redirect to login on success
-      navigate("/login");
+      // Navigate to /Dash and send signup info as state
+      if (role === "Admin") {
+        navigate("/AdDash");
+      } else if (role === "Student") {
+        navigate("/StudentDash");
+      } else navigate("/ProfDash");
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Signup failed. Try again.");
+      setError(
+        err.response?.data?.message || "Signup failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="flex w-full max-w-4xl rounded-lg shadow-lg overflow-hidden">
-        {/* Left Side */}
         <div className="w-1/2 bg-indigo-600 text-white p-10 flex flex-col justify-center items-center">
           <div className="text-center">
             <h1 className="text-3xl font-semibold mb-4">
@@ -55,54 +63,65 @@ function Signup() {
           </div>
         </div>
 
-        {/* Right Side */}
         <div className="w-1/2 p-10">
           <h1 className="text-3xl font-semibold mb-4 text-gray-800">Sign Up</h1>
           <p className="text-gray-600 mb-6">Create your account</p>
-          {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
-          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              className="w-full p-3 border rounded-md"
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="email"
-              className="w-full p-3 border rounded-md"
-              placeholder="Your Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              className="w-full p-3 border rounded-md"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <input
-              type="password"
-              className="w-full p-3 border rounded-md"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <label className="block">
+              <input
+                type="text"
+                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+            <label className="block">
+              <input
+                type="email"
+                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                placeholder="Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+            <label className="block">
+              <input
+                type="password"
+                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <label className="block">
+              <input
+                type="password"
+                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </label>
 
-            {/* Role Selection */}
-            <div className="flex space-x-4">
-              <select className="w-full p-3 border rounded-md" name="Role">
-                <option value="Professor" />
-                <option value="Student" />
-              </select>
-            </div>
+            <select
+              className="w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}>
+              <option value="" hidden>
+                Role
+              </option>
+              <option value="Professor">Professor</option>
+              <option value="Student">Student</option>
+              <option value="Admin">Admin</option>
+            </select>
 
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-              Sign Up
+              className="w-full py-3 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              disabled={loading}>
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
 
             <p className="text-sm text-center text-gray-600">

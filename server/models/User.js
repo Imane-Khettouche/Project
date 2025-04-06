@@ -8,8 +8,11 @@ const User = sequelize.define(
     email: {type: DataTypes.STRING, unique: true, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
     role: {
-      type: DataTypes.ENUM("Admin", "Student", "Teacher"),
-      defaultValue: "Student",
+      type: DataTypes.ENUM("Admin", "Student", "Professor"),
+      allowNull: false,
+      validate: {
+        isIn: [["Admin", "Student", "Professor"]], // Ensures value is one of these
+      },
     },
   },
   {

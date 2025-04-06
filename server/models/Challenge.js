@@ -1,22 +1,26 @@
-const db = require("../db");
+import { DataTypes } from "sequelize";
+import sequelize from "../db.js";
+import User from "./User.js";
 
-// Get all challenges
-const getChallenges = (callback) => {
-  db.query("SELECT * FROM challenges", callback);
-};
+const Challenge = sequelize.define("challenge", {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  title: { type: DataTypes.STRING, allowNull: false },
+  description: { type: DataTypes.TEXT, allowNull: false },  // Use TEXT for longer descriptions
+  difficulty: {
+    type: DataTypes.ENUM("easy", "medium", "hard"),  // Use ENUM for predefined values
+    allowNull: false,
+  },
+  deadline: { type: DataTypes.DATE, allowNull: false },
+  challengeType: { type: DataTypes.STRING, allowNull: false },
+  professorID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: "id",
+    },
+  },
+}, {
+  timestamps: false,  // Move timestamps here
+});
 
-// Get challenge by ID
-const getChallengeById = (id, callback) => {
-  db.query("SELECT * FROM challenges WHERE id = ?", [id], callback);
-};
-
-// Create a new challenge
-const createChallenge = (title, description, difficulty, status, deadline, challengeType, professorID, callback) => {
-  db.query(
-    "INSERT INTO challenges (title, description, difficulty, status, deadline, challenge_type, professor_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [title, description, difficulty, status, deadline, challengeType, professorID],
-    callback
-  );
-};
-
-module.exports = { getChallenges, getChallengeById, createChallenge };
+export default Challenge;

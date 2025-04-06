@@ -1,12 +1,17 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import cors from "cors";
+//import {Server} from "socket.io";
+//import http from "http";
 import User from "./models/User.js";
 import sequelize from "./db.js";
-import cors from "cors";
+import QuoteRouter from "./routes/quotes.js";
+import UserRouter from "./routes/users.js";
+import ChallengeRouter from "./routes/challenge.js";
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const app = express(); //create an express app
+app.use(cors()); // Allows requests from other websites (important for frontend)
+app.use(express.json()); // Converts incoming requests to JSON
 
 // ✅ Debug Middleware: Log incoming requests
 app.use((req, res, next) => {
@@ -33,6 +38,7 @@ app.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user in database
+
     const newUser = await User.create({
       name,
       email,
@@ -47,13 +53,7 @@ app.post("/signup", async (req, res) => {
     res.status(500).json({message: "Server error", error: err.message});
   }
 });
-
-// Start Server
-const PORT = process.env.PORT || 5000;
-sequelize.sync().then(() => {
-  console.log("✅ MySQL Database Synced");
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-});
+//Login
 app.post("/api/login", async (req, res) => {
   const {email, password} = req.body;
 
@@ -75,4 +75,20 @@ app.post("/api/login", async (req, res) => {
     console.error("Login error:", error);
     res.status(500).json({message: "Internal server error"});
   }
+});
+
+//Quote
+app.use("/api/quotes", QuoteRouter);
+
+//User
+app.use("/api/users", UserRouter);
+
+//Challenge
+app.use("/api/challenges", ChallengeRouter);
+
+// Start Server
+const PORT = process.env.PORT || 5000;
+sequelize.sync({alter: true}).then(() => {
+  console.log("✅ MySQL Database Synced");
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 });

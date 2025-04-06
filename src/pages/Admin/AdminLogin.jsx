@@ -1,4 +1,41 @@
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email, password}),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store user info in localStorage or state
+        localStorage.setItem("userData", JSON.stringify(data.user));
+
+        // Redirect to dashboard
+        navigate("/AdDash");
+      } else {
+        setError(data.message || "Invalid email or password");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -16,8 +53,9 @@ function Login() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <label className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
@@ -29,6 +67,8 @@ function Login() {
                   required
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -45,6 +85,8 @@ function Login() {
                   required
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -75,7 +117,7 @@ function Login() {
               <button
                 type="submit"
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Sign in
+                Log in
               </button>
             </div>
           </form>

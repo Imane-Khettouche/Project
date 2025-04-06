@@ -6,6 +6,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -23,11 +24,14 @@ function Login() {
 
       if (response.ok) {
         // Store user info in localStorage or state
-        localStorage.setItem("userName", data.user.name);
-        localStorage.setItem("userRole", data.user.role);
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        const role = data.user.role;
 
-        // Redirect to dashboard
-        navigate("/Dsh");
+        if (role === "Admin") {
+          navigate("/AdDash");
+        } else if (role === "Student") {
+          navigate("/StudentDash");
+        } else navigate("/ProfDash");
       } else {
         setError(data.message || "Invalid email or password");
       }
