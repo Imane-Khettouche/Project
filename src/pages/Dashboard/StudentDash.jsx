@@ -72,11 +72,11 @@ function ChallengeBar() {
 
   return (
     <>
-      <div className="grid bg-gray-50 border-1 border-gray-100 w-screen h-100 p-10">
+      <div className="flex   w-screen h-100 p-10">
         {challenges.map((c) => (
           <div
             key={c.id}
-            className=" grid items-center h-80 w-80 border border-gray-400 rounded-2xl shadow-2xl p-5 text-xl  ">
+            className=" grid items-center bg-gray-100 h-80 w-100 border border-gray-400 rounded-2xl shadow-2xl p-5 m-6 text-xl  ">
             <h1>
               <span className=" font-bold">Title:</span>
               {c.title}

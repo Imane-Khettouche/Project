@@ -64,16 +64,16 @@ function UserList() {
 
   return (
     <div className="bg-gray-100 m-4 p-5 rounded-lg shadow-md">
-      <h3 className="text-lg font-bold mb-4">Gestion des utilisateurs</h3>
+      <h3 className="text-lg font-bold mb-4">User Management</h3>
 
       {users.length > 0 ? (
         <table className="w-full table-auto bg-white rounded-lg shadow">
           <thead>
             <tr className="font-bold">
-              <td>Id</td>
-              <td>Nom</td>
+              <td>ID</td>
+              <td>Name</td>
               <td>Email</td>
-              <td>Rôle</td>
+              <td>Role</td>
               <td>Actions</td>
             </tr>
           </thead>
@@ -88,7 +88,7 @@ function UserList() {
                   <button
                     className="text-red-600 px-2 mx-5 py-1 rounded-lg cursor-pointer"
                     onClick={() => deleteUser(u.id)}>
-                    Supprimer
+                    Delete
                   </button>
                 </td>
               </tr>
@@ -96,7 +96,7 @@ function UserList() {
           </tbody>
         </table>
       ) : (
-        <p>Chargement des utilisateurs...</p>
+        <p>Loading users...</p>
       )}
     </div>
   );
@@ -137,15 +137,14 @@ function QuoteForm() {
     <form
       className="grid bg-white p-8 rounded-lg shadow-md"
       onSubmit={handleSubmit}>
-      <h1>give the Quote</h1>
+      <h1>Enter the Quote</h1>
       <textarea
-        type="text"
         rows={3}
         className="border border-gray-500 mt-3"
         value={quoteDes}
         onChange={(e) => setQuote(e.target.value)}
       />
-      <h1>give the owner</h1>
+      <h1>Enter the Source</h1>
       <input
         type="text"
         className="border border-gray-500 mt-3"
@@ -164,6 +163,7 @@ function QuoteForm() {
 
 function QuotesList() {
   const [quotes, setQuotes] = useState([]);
+  const [displayedContent, setDisplayedContent] = useState(null);
 
   useEffect(() => {
     async function fetchQuotes() {
@@ -177,8 +177,6 @@ function QuotesList() {
     }
     fetchQuotes();
   }, []);
-
-  const [displayedContent, setDisplayedContent] = useState(null);
 
   const handleButtonClick = (Component) => {
     setDisplayedContent(<Component />);
@@ -210,18 +208,18 @@ function QuotesList() {
 
   return (
     <section id="quotes" className="mt-10">
-      <h3 className="text-lg font-bold mb-4">Gestion des citations</h3>
+      <h3 className="text-lg font-bold mb-4">Quote Management</h3>
       <button
         className="bg-indigo-600 text-white px-4 py-2 rounded-lg mb-4"
         onClick={() => handleButtonClick(QuoteForm)}>
-        Ajouter une citation
+        Add a Quote
       </button>
       {displayedContent}
       <table className="w-full table-auto bg-white rounded-lg shadow">
         <thead>
           <tr>
-            <td className="p-2">Citation</td>
             <td className="p-2">Source</td>
+            <td className="p-2">Quote</td>
             <td className="p-2">Actions</td>
           </tr>
         </thead>
@@ -234,7 +232,7 @@ function QuotesList() {
                 <button
                   className="text-red-500 px-2 mx-0.5 py-1 rounded-lg"
                   onClick={() => handleDelete(q.id)}>
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>
@@ -248,7 +246,6 @@ function QuotesList() {
 function ChallengeList() {
   const [challenges, setChallenges] = useState([]);
 
-  // Fetch quotes when the component loads
   useEffect(() => {
     async function fetchChallenges() {
       try {
@@ -279,9 +276,7 @@ function ChallengeList() {
 
       const data = await response.json();
       if (response.ok) {
-        alert(data.message); // "Challenge deleted successfully"
-        // ✅ Remove the deleted challenge from the UI (if you’re using state)
-        // For example, if you have a list of challenges in state:
+        alert(data.message);
         setChallenges((prev) => prev.filter((c) => c.id !== id));
       } else {
         alert(data.message || "Error deleting challenge");
@@ -293,8 +288,8 @@ function ChallengeList() {
   };
 
   return (
-    <section id="quotes" className="mt-10">
-      <h3 className="text-lg font-bold mb-4">Gestion des citations</h3>
+    <section id="challenges" className="mt-10">
+      <h3 className="text-lg font-bold mb-4">Challenge Management</h3>
 
       <table className="w-full table-auto bg-white rounded-lg shadow">
         <thead>
@@ -304,8 +299,9 @@ function ChallengeList() {
             <td className="p-2">Description</td>
             <td className="p-2">Difficulty</td>
             <td className="p-2">Deadline</td>
-            <td className="p-2">Challenge Type</td>
-            <td className="p-2">Professor </td>
+            <td className="p-2">Type</td>
+            <td className="p-2">Professor</td>
+            <td className="p-2">Actions</td>
           </tr>
         </thead>
         <tbody>
@@ -330,7 +326,7 @@ function ChallengeList() {
                 <button
                   className="text-red-500 px-2 mx-0.5 py-1 rounded-lg"
                   onClick={() => handleDelete(c.id)}>
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>
@@ -340,6 +336,7 @@ function ChallengeList() {
     </section>
   );
 }
+
 function Aside() {
   const [displayedContent, setDisplayedContent] = useState(null);
 
@@ -350,17 +347,12 @@ function Aside() {
   return (
     <>
       <aside className="w-1/5 bg-white p-5 shadow-lg">
-        <h2 className="text-2xl font-bold mb-6">Défis Académiques</h2>
+        <h2 className="text-2xl font-bold mb-6">Academic Challenges</h2>
         <nav>
           <ul>
             <li className="mb-4">
               <a href="#" className="text-gray-600 hover:text-indigo-600">
-                📊 Tableau de bord
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="text-gray-600 hover:text-indigo-600">
-                📩 Messages
+                📊 Dashboard
               </a>
             </li>
             <li className="mb-4">
@@ -368,32 +360,15 @@ function Aside() {
                 href="#"
                 className="text-gray-600 hover:text-indigo-600"
                 onClick={() => handleButtonClick(ChallengeList)}>
-                🏆 Défis
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="text-gray-600 hover:text-indigo-600">
-                ✅ Corrections
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="text-gray-600 hover:text-indigo-600">
-                👥 Classement
+                🏆 Challenges
               </a>
             </li>
             <li className="mb-4">
               <a
-                href="#users"
+                href="#"
                 className="text-gray-600 hover:text-indigo-600"
                 onClick={() => handleButtonClick(UserList)}>
-                👤 Gestion des utilisateurs
-              </a>
-            </li>
-            <li className="mb-4">
-              <a
-                href="#challenges"
-                className="text-gray-600 hover:text-indigo-600">
-                🎯 Gestion des défis
+                👤 User Management
               </a>
             </li>
             <li className="mb-4">
@@ -401,14 +376,7 @@ function Aside() {
                 href="#quotes"
                 className="text-gray-600 hover:text-indigo-600"
                 onClick={() => handleButtonClick(QuotesList)}>
-                💬 Gestion des citations
-              </a>
-            </li>
-            <li className="mb-4">
-              <a
-                href="#portfolio"
-                className="text-gray-600 hover:text-indigo-600">
-                📁 Portfolio
+                💬 Quote Management
               </a>
             </li>
           </ul>
