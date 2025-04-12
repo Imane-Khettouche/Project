@@ -27,6 +27,7 @@ function ChallengesAdd() {
   const [difficulty, setDifficulty] = useState("");
   const [deadline, setDeadline] = useState("");
   const [challengeType, setChallengeType] = useState("");
+  const [workType, setWorkType] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState("");
   const [userData, setUserData] = useState(null);
@@ -56,6 +57,7 @@ function ChallengesAdd() {
           description,
           difficulty,
           deadline,
+          workType,
           challengeType,
           professorID: userData.id,
         }),
@@ -67,6 +69,7 @@ function ChallengesAdd() {
         setChallengeType("");
         setDescription("");
         setDeadline("");
+        setWorkType("");
         setTitle("");
         setDifficulty("");
       } else {
@@ -95,19 +98,39 @@ function ChallengesAdd() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <input
+        <select
           type="text"
           placeholder="difficulty"
           className="border border-gray-600 w-full  m-5 p-4 "
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
-        />
+        ><option value="" hidden>
+            Difficulty
+          </option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
         <input
           type="date"
           className="border border-gray-600 w-full  m-5 p-4 "
           value={deadline}
           onChange={(e) => setDeadline(e.target.value)}
         />
+        <select
+          type="text"
+          placeholder="Work Type"
+          className="border border-gray-600 w-full  m-5 p-4 "
+          value={workType}
+          onChange={(e) => setWorkType(e.target.value)}>
+          {" "}
+          <option value="" hidden>
+            Work Type
+          </option>
+          <option value="individual">Individual</option>
+          <option value="team">Team</option>
+        </select>
+
         <input
           type="text"
           placeholder="challengeType"
@@ -217,7 +240,7 @@ function ChallengeList() {
               </td>
               <td className="flex p-2 ">
                 <button
-                  className="text-red-500 px-2 mx-0.5 py-1 rounded-lg"
+                  className="text-red-500 px-2 mx-1 py-1 rounded-lg"
                   onClick={() => handleDelete(c.id)}>
                   Supprimer
                 </button>

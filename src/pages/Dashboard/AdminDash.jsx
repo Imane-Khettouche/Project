@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
-
+import Logo from "../../img/Logo.jpg";
+import dashIcon from "../../img/Dashboard.svg";
 function AdminInfo() {
   const [userData, setUserData] = useState(null);
 
@@ -347,12 +348,14 @@ function Aside() {
   return (
     <>
       <aside className="w-1/5 bg-white p-5 shadow-lg">
-        <h2 className="text-2xl font-bold mb-6">Academic Challenges</h2>
+        <h2 className="text-2xl font-bold mb-6">
+          <img src={Logo} width="250px" />
+        </h2>
         <nav>
           <ul>
             <li className="mb-4">
-              <a href="#" className="text-gray-600 hover:text-indigo-600">
-                📊 Dashboard
+              <a href="#" className="flex  text-gray-600 hover:text-indigo-600">
+                <img src={dashIcon} className="w-5" /> Dashboard
               </a>
             </li>
             <li className="mb-4">
