@@ -1,28 +1,26 @@
 import {useEffect, useState} from "react";
 import Logo from "../../img/Logo.jpg";
 import dashIcon from "../../img/Dashboard.svg";
+import {useUser} from "../UserContext.jsx";
+
 function AdminInfo() {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userData");
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
-    }
-  }, []);
-
+  const {userData} = useUser();
   if (!userData) {
-    return <div>Loading...</div>;
+    return <p className="text-center mt-5 text-red-500">There is no info</p>;
   }
 
   return (
-    <div className="text-xl font-bold mb-4">
-      <p>{userData.name}</p>
-      <p>{userData.email}</p>
+    <div className="grid justify-center bg-gray-100 p-4 rounded">
+      {/*  <img
+        src={userData.avatar || "/default-avatar.png"}
+        alt="Profile"
+        className="w-20 h-20 rounded-full"
+      />*/}
+      <h1 className="text-xl">{userData.name}</h1>
+      <h1 className="text-gray-600">{userData.email}</h1>
     </div>
   );
 }
-
 function UserList() {
   const [users, setUsers] = useState([]);
 
@@ -135,7 +133,7 @@ function QuoteForm() {
   };
 
   return (
-    <form
+    <><form
       className="grid bg-white p-8 rounded-lg shadow-md"
       onSubmit={handleSubmit}>
       <h1>Enter the Quote</h1>
@@ -158,7 +156,7 @@ function QuoteForm() {
         Submit
       </button>
       {message && <p className="mt-4">{message}</p>}
-    </form>
+    </form></>
   );
 }
 

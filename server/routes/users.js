@@ -19,7 +19,7 @@ UserRouter.get("/", async (req, res) => {
 
 // Delete user by ID
 UserRouter.delete("/:id", async (req, res) => {
-  const userId = parseInt(req.params.id, 10);
+  const userId = req.params.id;
 
   if (isNaN(userId)) {
     return res.status(400).json({message: "Invalid user ID"});

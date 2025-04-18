@@ -8,7 +8,7 @@ import LandingPage from "./pages/Landing/LandingPage.jsx";
 import Dashboard from "./pages/Dashboard/StudentDash.jsx";
 import AdminDash from "./pages/Dashboard/AdminDash.jsx";
 import ProfDash from "./pages/Dashboard/ProfDash.jsx";
-//import AdminDashboard from "./example.jsx";
+import Code from "./example.jsx";
 
 const router = createBrowserRouter([
   {path: "/", element: <LandingPage />},
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
   {path: "/StudentDash", element: <Dashboard />},
   {path: "/AdDash", element: <AdminDash />},
   {path: "/ProfDash", element: <ProfDash />},
- // {path: "/example", element:<AdminDashboard/>},
+  {path: "/e", element:<Code/>},
 ]);
 //<RouterProvider router={router} />
 //import Dashboard from "./pages/Dashboard/Dashboard.jsx"

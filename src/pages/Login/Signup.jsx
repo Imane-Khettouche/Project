@@ -10,32 +10,54 @@ function Signup() {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(null); // State for photo
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation for form fields
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
 
+    if (!email || !name || !password || !confirmPassword || !role) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     setLoading(true);
 
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+    if (photo) {
+      formData.append("photo", photo); // Append the selected file
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        name,
-        email,
-        password,
-        role,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/signup",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
+        }
+      );
       console.log(response.data);
 
-      // Navigate to /Dash and send signup info as state
+      // Navigate to the appropriate dashboard based on the role
       if (role === "Admin") {
         navigate("/AdDash");
       } else if (role === "Student") {
         navigate("/StudentDash");
-      } else navigate("/ProfDash");
+      } else if (role === "Professor") {
+        navigate("/ProfDash");
+      }
     } catch (err) {
       console.error(err);
       setError(
@@ -116,6 +138,15 @@ function Signup() {
               <option value="Student">Student</option>
               <option value="Admin">Admin</option>
             </select>
+
+            {/* File input for photo */}
+            <label className="block">
+              <input
+                type="file"
+                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                onChange={(e) => setPhoto(e.target.files[0])}
+              />
+            </label>
 
             <button
               type="submit"

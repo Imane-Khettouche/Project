@@ -1,12 +1,13 @@
 import {DataTypes} from "sequelize";
-import sequelize from "../db.js";
+import sequelize from "../db.js"; // Import UUID v4 for generating IDs
 
 const User = sequelize.define(
   "users",
   {
     id: {
-      type: DataTypes.STRING, // Or DataTypes.UUID
-      primaryKey: true,
+      type: DataTypes.UUID, // Use UUID for automatic ID generation
+      defaultValue: DataTypes.UUIDV4, // ✅ Sequelize will handle UUID generation correctly
+      primaryKey: true, // Ensure this is marked as the primary key
       allowNull: false,
       unique: true,
     },
@@ -16,6 +17,10 @@ const User = sequelize.define(
     role: {
       type: DataTypes.ENUM("Admin", "Student", "Professor"),
       allowNull: false,
+    },
+    photoUrl: {
+      type: DataTypes.STRING, // URL to the photo (optional)
+      allowNull: true, // This field is optional
     },
   },
   {

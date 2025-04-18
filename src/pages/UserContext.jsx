@@ -1,19 +1,25 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-// Create the context
+
 const UserContext = createContext();
 
-// Define the UserProvider component
+
 export const UserProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(() => {
+    
+    const storedUser = localStorage.getItem("userData");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("userData");
-    if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+    
+    if (userData) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+      localStorage.removeItem("userData"); 
     }
-  }, []);
+  }, [userData]); 
 
   return (
     <UserContext.Provider value={{ userData, setUserData }}>
@@ -22,10 +28,10 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-// Add propTypes after the component definition
+
 UserProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// Custom hook to access user context
+
 export const useUser = () => useContext(UserContext);

@@ -1,13 +1,15 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../UserContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setUserData } = useUser();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -17,27 +19,26 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
+      console.log("✅ Login Response Data:", data);
 
-      if (response.ok) {
-        // Store user info in localStorage or state
-        localStorage.setItem("userData", JSON.stringify(data.user));
+      if (response.ok && data.user) {
+        sessionStorage.setItem("userData", JSON.stringify(data));
+        setUserData(data.user);
+
         const role = data.user.role;
-
-        if (role === "Admin") {
-          navigate("/AdDash");
-        } else if (role === "Student") {
-          navigate("/StudentDash");
-        } else navigate("/ProfDash");
+        if (role === "Admin") navigate("/AdDash");
+        else if (role === "Student") navigate("/StudentDash");
+        else navigate("/ProfDash");
       } else {
-        setError(data.message || "Invalid email or password");
+        setError(data.message || "Invalid login credentials. Please try again.");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      console.error("🔥 Fetch Error during login:", err);
+      setError("Network error. Please check your internet connection.");
     }
   };
 
@@ -45,9 +46,9 @@ function Login() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="flex w-full max-w-4xl rounded-lg shadow-lg overflow-hidden">
         <div className="w-1/2 bg-indigo-600 text-white p-10 flex flex-col justify-center items-center">
-          <div className="welcome-container text-center">
+          <div className="text-center">
             <h1 className="text-3xl font-semibold mb-4">Welcome Back</h1>
-            <p className="mb-6">You don&apos;t have an account?</p>
+            <p className="mb-6">Don&apos;t have an account?</p>
             <Link to="/Signup">
               <button className="bg-white text-indigo-600 py-2 px-4 rounded-full font-semibold hover:bg-indigo-100 transition-colors">
                 Sign Up
@@ -55,13 +56,13 @@ function Login() {
             </Link>
           </div>
         </div>
-        <div className="w-1/2 p-10">
+        <div className="w-1/2 p-10 bg-white">
           <h1 className="text-3xl font-semibold mb-4 text-gray-800">Login</h1>
           <p className="text-gray-600 mb-6">
-            Welcome back! Please login your account
+            Welcome back! Please login to your account
           </p>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <form className="space-y-4" onSubmit={handleLogin}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <input
                 type="email"
@@ -89,10 +90,10 @@ function Login() {
             </button>
           </form>
           <p className="text-sm text-center text-gray-600 mt-4">
-            Forget your password?{" "}
-            <a href="#" className="text-indigo-600 hover:underline">
+            Forgot your password?{" "}
+            <Link to="/ResetPassword" className="text-indigo-600 hover:underline">
               Reset password
-            </a>
+            </Link>
           </p>
         </div>
       </div>

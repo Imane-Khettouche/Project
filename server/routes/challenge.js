@@ -24,6 +24,7 @@ ChallengeRouter.post("/", async (req, res) => {
       description,
       difficulty,
       deadline,
+      workType,
       challengeType,
       professorID,
     } = req.body;
@@ -35,6 +36,7 @@ ChallengeRouter.post("/", async (req, res) => {
       !difficulty ||
       !deadline ||
       !challengeType ||
+      !workType ||
       !professorID
     ) {
       return res.status(400).json({message: "All fields are required!"});
@@ -57,12 +59,10 @@ ChallengeRouter.post("/", async (req, res) => {
     const newChallenge = await challenge.create(req.body);
 
     // ✅ Return success message + created challenge
-    res
-      .status(201)
-      .json({
-        message: "Challenge created successfully",
-        challenge: newChallenge,
-      });
+    res.status(201).json({
+      message: "Challenge created successfully",
+      challenge: newChallenge,
+    });
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       const errors = error.errors.map((err) => err.message);
@@ -81,18 +81,18 @@ ChallengeRouter.delete("/:id", async (req, res) => {
   const ChallengeId = parseInt(req.params.id, 10);
 
   if (isNaN(ChallengeId)) {
-    return res.status(400).json({ message: "Invalid challenge ID" });
+    return res.status(400).json({message: "Invalid challenge ID"});
   }
 
   try {
     const deletedChallenge = await challenge.destroy({
-      where: { id: ChallengeId },
+      where: {id: ChallengeId},
     });
 
     if (deletedChallenge) {
-      res.json({ message: "Challenge deleted successfully" });
+      res.json({message: "Challenge deleted successfully"});
     } else {
-      res.status(404).json({ message: "Challenge not found" });
+      res.status(404).json({message: "Challenge not found"});
     }
   } catch (error) {
     console.error("❌ Error deleting challenge:", error);

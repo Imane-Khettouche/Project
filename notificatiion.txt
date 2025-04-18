@@ -1,0 +1,137 @@
+
+const Notifications = ({userId}) => {
+  const [receivedInvitations, setReceivedInvitations] = useState([]);
+  const [sentInvitations, setSentInvitations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Example: const { user } = useContext(AuthContext); const userId = user?.id;
+
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [receivedRes, sentRes] = await Promise.all([
+          axios.get(`${BASE_URL}/api/invite/received/${userId}`),
+          axios.get(`${BASE_URL}/api/invite/sent/${userId}`),
+        ]);
+
+        setReceivedInvitations(receivedRes.data);
+        setSentInvitations(sentRes.data);
+      } catch (err) {
+        setError(
+          "Error fetching invitations: " +
+            (err.response?.data?.message || err.message)
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchData();
+    }
+  }, [userId]);
+
+  const handleResponse = async (invitationId, status) => {
+    try {
+      await axios.put(`${BASE_URL}/api/invite/${invitationId}`, {status});
+
+      setReceivedInvitations((prev) =>
+        prev.map((inv) => (inv.id === invitationId ? {...inv, status} : inv))
+      );
+    } catch (err) {
+      setError(
+        "Error updating invitation: " +
+          (err.response?.data?.message || err.message)
+      );
+    }
+  };
+
+  const renderStatusIcon = (status) => {
+    if (status === "accepted")
+      return <FaCheckCircle className="text-green-500" />;
+    if (status === "declined")
+      return <FaTimesCircle className="text-red-500" />;
+    return <FaHourglassHalf className="text-yellow-500" />;
+  };
+
+  if (loading) return <p>Loading invitations...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
+  return (
+    <div className="p-4 space-y-6">
+      {/* 📥 Received Invitations */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">📥 Received Invitations</h2>
+        {receivedInvitations.length === 0 ? (
+          <p>No invitations received.</p>
+        ) : (
+          receivedInvitations.map((inv) => (
+            <div
+              key={inv.id}
+              className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
+              <div>
+                <p>
+                  <strong>{inv.senderName || `User ${inv.senderId}`}</strong>{" "}
+                  invited you to{" "}
+                  <strong>
+                    {inv.challengeName || `Challenge ${inv.challengeId}`}
+                  </strong>
+                </p>
+                {inv.status === "pending" && (
+                  <div className="space-x-2 mt-2">
+                    <button
+                      onClick={() => handleResponse(inv.id, "accepted")}
+                      className="bg-green-500 text-white px-3 py-1 rounded">
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleResponse(inv.id, "declined")}
+                      className="bg-red-500 text-white px-3 py-1 rounded">
+                      Decline
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div>{renderStatusIcon(inv.status)}</div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* 📨 Sent Invitations */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">📤 Sent Invitations</h2>
+        {sentInvitations.length === 0 ? (
+          <p>No invitations sent.</p>
+        ) : (
+          sentInvitations.map((inv) => (
+            <div
+              key={inv.id}
+              className="flex justify-between items-center bg-blue-50 p-4 rounded-lg shadow">
+              <div>
+                <p>
+                  You invited{" "}
+                  <strong>
+                    {inv.receiverName || `User ${inv.receiverId}`}
+                  </strong>{" "}
+                  to{" "}
+                  <strong>
+                    {inv.challengeName || `Challenge ${inv.challengeId}`}
+                  </strong>
+                </p>
+              </div>
+              <div>{renderStatusIcon(inv.status)}</div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+Notifications.propTypes = {
+  userId: PropTypes.number.isRequired,
+};

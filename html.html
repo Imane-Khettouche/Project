@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard with Sidebar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        display: flex;
+      }
+
+      aside.menu {
+        width: 200px;
+        background-color: #f0eff02d;
+        padding: 20px;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .main-content {
+        margin-left: 200px; /* عرض القائمة الجانبية اليسرى */
+        margin-right: 250px; /* عرض القائمة الجانبية اليمنى */
+        padding: 20px;
+        width: calc(100% - 450px); /* 200 + 250 */
+      }
+
+      .quote-bar {
+        background-color: #7d79bd;
+        margin: 30px auto;
+        padding: 15px;
+        border-radius: 24px;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        max-width: 70%;
+        text-align: center;
+      }
+
+      .challenge-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center; /* لتوسيط الكروت */
+        padding: 20px;
+        width: 100%;
+        margin-left: -10px;
+      }
+      .challenge-card {
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: 25px;
+        width: 280px;
+        font-size: 14px;
+      }
+
+      .challenge-card h1,
+      .challenge-card h3 {
+        font-size: 12px;
+        margin: 23px 0;
+        color: #111827;
+      }
+
+      .highlight {
+        background-color: #eef2ff;
+        color: #7d79bd;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 12px;
+        margin: 8px;
+      }
+      .challenge-card img {
+        border-radius: 24px;
+        width: 290px;
+        height: 220px;
+      }
+
+      /* From Uiverse.io by cssbuttons-io */
+      button {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        outline: none;
+        border: 0;
+        vertical-align: middle;
+        text-decoration: none;
+        background: transparent;
+        padding: 0;
+        font-size: 10px;
+        color: #535252;
+        font-family: inherit;
+      }
+
+      button.learn-more {
+        width: 10rem;
+        height: auto;
+      }
+
+      button.learn-more .circle {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: relative;
+        display: block;
+        margin: 0;
+
+        width: 2rem;
+        height: 2rem;
+        background: #7d79bd;
+        border-radius: 1.625rem;
+      }
+
+      button.learn-more .circle .icon {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        margin-left: -5px;
+        background: #fff;
+      }
+
+      button.learn-more .circle .icon.arrow {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        left: 0.625rem;
+        width: 1.125rem;
+        height: 0.125rem;
+        background: none;
+      }
+
+      button.learn-more .circle .icon.arrow::before {
+        position: absolute;
+        content: "";
+        top: -0.29rem;
+        right: 0.0625rem;
+        width: 0.625rem;
+        height: 0.625rem;
+        border-top: 0.125rem solid #fff;
+        border-right: 0.125rem solid #fff;
+        transform: rotate(45deg);
+      }
+
+      button.learn-more .button-text {
+        transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0.75rem 0;
+        margin: 0 0 0 1.85rem;
+        color: #282936;
+        font-weight: 700;
+        line-height: 1.6;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      button:hover .circle {
+        width: 100%;
+      }
+
+      button:hover .circle .icon.arrow {
+        background: #fff;
+        transform: translate(1rem, 0);
+      }
+
+      button:hover .button-text {
+        color: #fff;
+      }
+
+      .dashboard-container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+      }
+
+      aside {
+        width: 20%;
+        background-color: #655d650e;
+        padding: 15px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+      /* تم نقل التنسيق الخاص بـ h2 إلى ما بعد استبداله بالشعار */
+      main {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+      }
+      nav ul {
+        list-style: none;
+        padding: 0;
+      }
+      nav ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      nav li {
+        margin-bottom: 20px; /* تقليل التباعد السفلي */
+        padding-bottom: 10px; /* إضافة بعض التباعد الداخلي */
+        /* border-bottom: 1px solid #eee; /* إضافة حدود فاصلة خفيفة (اختياري) */
+      }
+
+      nav a {
+        color: #535252;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: bolder;
+        display: flex; /* لجعل الأيقونة والنص في نفس السطر */
+        align-items: center; /* لمحاذاة العناصر عموديًا في المنتصف */
+        padding: 8px 0; /* إضافة بعض التباعد العمودي للرابط */
+        position: relative; /* ضروري للعناصر الزائفة */
+        transition: color 0.3s ease, font-size 0.3s ease; /* انتقال للون وحجم الخط */
+      }
+
+      nav a img {
+        /* استهداف عنصر الصورة داخل الرابط */
+        margin-left: 10px;
+        margin-right: 10px; /* إضافة مسافة بين الأيقونة والنص (يمكن تعديلها) */
+      }
+
+      nav li:hover {
+        background-color: #cdcbf8;
+        border-radius: 20px;
+        border: none; /* لا حاجة لتحديد لون الحدود هنا إذا كانت بيضاء */
+        height: 40px;
+        padding: 2px;
+        padding-top: 8px;
+        padding-left: 10px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* إضافة انتقال سلس للخلفية والظل */
+        cursor: pointer; /* تغيير شكل المؤشر عند التمرير */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف عند التمرير (اختياري) */
+      }
+      nav a:hover {
+        color: #ffffff;
+        font-size: 17px; /* تقليل القفزة في الحجم قليلاً */
+      }
+
+      nav a::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background-color: #ffffff; /* لون الخط السفلي */
+        transition: width 0.3s ease;
+      }
+
+      nav a:hover::before {
+        width: 100%;
+      }
+
+      /* القائمة الجانبية اليمنى */
+      .right-sidebar {
+        width: 250px;
+        background-color: #f0eff02d;
+        border-left: 1px solid #ddd;
+        padding: 20px;
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-info {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .user-info img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+
+      .user-info h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #65619b;
+        padding: 5px;
+      }
+
+      .user-info p {
+        color: #535151;
+        font-size: 14px;
+        margin: 30px;
+      }
+
+      canvas {
+        margin-top: 60px;
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      /* From Uiverse.io by LightAndy1 */
+      .group {
+        display: flex;
+        line-height: 28px;
+        align-items: center;
+        position: relative;
+        max-width: 80%;
+        padding-left: 40px;
+      }
+
+      .input {
+        margin-left: 55px;
+        font-family: "Montserrat", sans-serif;
+        width: 600px;
+        height: 40px;
+        padding-left: 2.5rem;
+        box-shadow: 0 0 0 1.5px #cdcbf8, 0 0 25px -17px;
+        border: 0;
+        border-radius: 12px;
+        background-color: #f7f7f7;
+        outline: none;
+        color: #ffffff;
+        transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+        cursor: text;
+        z-index: 0;
+      }
+
+      .input::placeholder {
+        color: #bdbecb;
+      }
+
+      .input:hover {
+        box-shadow: 0 0 0 2.5px #e5e4ea, 0px 0px 25px -15px #7d79bd;
+      }
+
+      .input:active {
+        transform: scale(0.95);
+      }
+
+      .input:focus {
+        box-shadow: 0 0 0 2.5px #7d79bd;
+        background-color: #dbdaf993;
+      }
+
+      .search-icon {
+        padding-left: 42px;
+        margin-left: 50px;
+        position: absolute;
+        left: 1rem;
+        fill: #a3a4ac;
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .challenge-table {
+        width: 90%;
+        margin: 40px auto;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .challenge-table th,
+      .challenge-table td {
+        padding: 16px 20px;
+        text-align: left;
+      }
+
+      .challenge-table th {
+        background-color: #7d79bdcb;
+        color: white;
+        font-size: 15px;
+      }
+      .challenge-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .challenge-table tr:hover {
+        background-color: #e8e8f9;
+      }
+
+      .challenge-table td {
+        font-size: 12px;
+        color: #333;
+      }
+
+      .hero-section {
+        background-color: #c2bdf345;
+        padding: 40px 10px;
+        text-align: center;
+        border-radius: 24px;
+        margin: 40px auto;
+        width: 85%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .hero-content h1 {
+        font-size: 32px;
+        color: #7d79bd;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .hero-content p {
+        font-size: 12px;
+        color: #5f5f5f;
+        margin-bottom: 30px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .topics-tags {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 30px 0;
+        justify-content: center;
+      }
+
+      .tag-card {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #c2bdf345;
+        color: #4b4b7a;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        margin-left: 30px;
+      }
+
+      .tag-card:hover {
+        background-color: #e0e7ff;
+        color: #3b3b6d;
+      }
+
+      .tag-card i {
+        font-size: 18px;
+      }
+
+      .count {
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 400;
+        margin-left: 4px;
+      }
+
+      .tag-card img {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        padding-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- القائمة الجانبية اليسرى -->
+      <aside class="menu">
+        <h2>
+          <img alt=""
+            src="C:\Users\HP\Desktop\Project-main\src\img\Logo-removebg-preview.png"
+            alt="Logo"
+            style="width: 220px" />
+        </h2>
+        <nav>
+          <ul>
+            <li>
+              <a href="#"
+                ><img alt=""
+                  src="C:\Users\HP\Desktop\Project-main\src\img\dashboard-panel.svg"
+                  alt=""
+                  style="color: #cdcbf8; width: 25px" />
+                Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><img alt=""
+                  src="C:\Users\HP\Desktop\Project-main\src\img\challenge.svg"
+                  alt=""
+                  style="color: #cdcbf8; width: 25px" />
+                Challenges</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><img alt=""
+                  src="C:\Users\HP\Desktop\Project-main\src\img\settings-sliders.svg"
+                  alt=""
+                  style="color: #cdcbf8; width: 25px" />
+                Settings</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><img alt=""
+                  src="C:\Users\HP\Desktop\Project-main\src\img\sign-out-alt.svg"
+                  alt=""
+                  style="width: 22px" />
+                Logout</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- المحتوى الرئيسي -->
+      <div class="main-content">
+        <!-- From Uiverse.io by LightAndy1 -->
+        <div class="group">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+            <g>
+              <path
+                d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+            </g></svg><input
+            id="query"
+            class="input"
+            type="search"
+            placeholder="Search..."
+            name="searchbar" />
+        </div>
+        <div class="quote-bar">
+          "Success is not final, failure is not fatal: it is the courage to
+          continue that counts."
+        </div>
+        <section class="hero-section">
+          <div class="hero-content">
+            <h1>Welcome to the Challenge Dashboard</h1>
+            <p>
+              Discover coding challenges, track your progress, and grow your
+              skills in a vibrant learning environment.
+            </p>
+            <button class="learn-more">
+              <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+              </span>
+              <span class="button-text">Explore Now</span>
+            </button>
+          </div>
+        </section>
+        <div class="topics-tags">
+          <div class="tag-card">
+            <i class="fas fa-code"></i>
+            <span>
+              <img alt=""
+                src="C:\Users\HP\Desktop\Project-main\src\img\web-design.png" />Web
+              <span class="count">(8)</span></span
+            >
+          </div>
+          <div class="tag-card">
+            <i class="fas fa-cogs"></i>
+            <span>
+              <img alt=""
+                src="C:\Users\HP\Desktop\Project-main\src\img\algorithm.png" />Algo
+              <span class="count">(6)</span></span>
+          </div>
+          <div class="tag-card">
+            <i class="fas fa-robot"></i>
+            <span>
+              <img alt=""
+                src="C:\Users\HP\Desktop\Project-main\src\img\artificial-intelligence.png" />AI
+              <span class="count">(5)</span></span
+            >
+          </div>
+          <div class="tag-card">
+            <i class="fas fa-paint-brush"></i>
+            <span
+              ><img alt=""
+                src="C:\Users\HP\Desktop\Project-main\src\img\coding.png" />Design
+              <span class="count">(7)</span></span
+            >
+          </div>
+        </div>
+
+        <
+        <div class="challenge-bar">
+          <!-- البطاقة الأولى -->
+          <div class="challenge-card">
+            <img alt=""
+              src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" />
+            <h1>
+              <span class="highlight">Title:</span> Solve the Sorting Algorithm
+            </h1>
+
+            <h3><span class="highlight">Level</span> Intermediate</h3>
+            <h3><span class="highlight">Date</span> 2025-04-30</h3>
+            <h3><span class="highlight">Description</span> Intermediate</h3>
+            <button class="learn-more">
+              <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+              </span>
+              <span class="button-text">Learn More</span>
+            </button>
+          </div>
+
+          <!-- البطاقة الثانية -->
+          <div class="challenge-card">
+            <img alt=""
+              src="C:\Users\HP\Desktop\Project-main\src\img\Premium Vector _ App development concept with phone and desktop.jpeg" />
+            <h1>
+              <span class="highlight">Title:</span> Solve the Sorting Algorithm
+            </h1>
+
+            <h3><span class="highlight">Level</span> Intermediate</h3>
+            <h3><span class="highlight">Date</span> 2025-04-30</h3>
+            <h3><span class="highlight">Description</span> Intermediate</h3>
+            <button class="learn-more">
+              <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+              </span>
+              <span class="button-text">Learn More</span>
+            </button>
+          </div>
+        </div>
+
+        <table class="challenge-table">
+          <thead>
+            <tr>
+              <th>Your Challenge</th>
+              <th>Type</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Build a robot</td>
+              <td>Engineering</td>
+              <td>2025-04-13</td>
+            </tr>
+            <tr>
+              <td>Design a Logo</td>
+              <td>Graphic Design</td>
+              <td>2025-04-10</td>
+            </tr>
+            <tr>
+              <td>Code a Calculator</td>
+              <td>Programming</td>
+              <td>2025-03-30</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- القائمة الجانبية اليمنى -->
+      <aside class="right-sidebar">
+        <div class="user-info">
+          <img alt=""
+            src="C:\Users\HP\Desktop\Project-main\src\img\user.svg"
+            alt="User Photo" />
+          <h3>John Doe</h3>
+          <p>Rank: #12</p>
+        </div>
+        <canvas id="progressChart"></canvas>
+      </aside>
+    </div>
+  </body>
+</html><script>
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+          label: 'Progress',
+          data: [10, 25, 40, 55, 70],
+          backgroundColor: 'rgba(125, 121, 189, 0.2)',
+          borderColor: '#7d79bd',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: '#7d79bd'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+  </script>
+</div>
+</body>
+</html>

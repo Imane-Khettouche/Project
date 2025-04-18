@@ -1,57 +1,54 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { useUser } from "../UserContext.jsx";
+
+// ProfInfo Component to display user information
 function ProfInfo() {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userData");
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
-    }
-  }, []);
-
+  const { userData } = useUser();
   if (!userData) {
-    return <div>Loading...</div>;
+    return <p className="text-center mt-5 text-red-500">There is no info</p>;
   }
 
   return (
-    <div className="text-xl font-bold mb-4">
-      <p>{userData.name}</p>
-      <p>{userData.email}</p>
-      <p>{userData.id}</p>
+    <div className="grid justify-center bg-gray-100 p-4 rounded">
+      <div className="bg-gray-500 h-50 w-50 rounded-full">
+        <img
+          src={`http://localhost:5000${userData.photoUrl}`} // ✅ no extra `/uploads/`
+          alt="Profile"
+          className="w-32 h-32 object-cover rounded-full"
+        />
+      </div>
+      <h1 className="text-xl">{userData.name}</h1>
+      <h1 className="text-gray-600">{userData.email}</h1>
     </div>
   );
 }
+
+// ChallengesAdd Component for adding new challenges
 function ChallengesAdd() {
+  const { userData } = useUser();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [deadline, setDeadline] = useState("");
   const [challengeType, setChallengeType] = useState("");
   const [workType, setWorkType] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState("");
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userData");
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
-    }
-  }, []);
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <p className="text-center text-red-500">User data is unavailable. Please log in again.</p>;
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userData) {
       console.error("Userdata not found ");
       return;
     }
+
     try {
       const response = await fetch("http://localhost:5000/api/challenges", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
           description,
@@ -65,7 +62,7 @@ function ChallengesAdd() {
 
       const data = await response.json();
       if (response.ok) {
-        setMessage(data.message); // Success message from the server
+        setMessage(data.message);
         setChallengeType("");
         setDescription("");
         setDeadline("");
@@ -73,7 +70,7 @@ function ChallengesAdd() {
         setTitle("");
         setDifficulty("");
       } else {
-        setMessage(data.message || "Error creating challenge"); // Error message
+        setMessage(data.message || "Error creating challenge");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -83,28 +80,27 @@ function ChallengesAdd() {
 
   return (
     <>
-      <form className="grid   m-10 bg-gray-200 p-10 " onSubmit={handleSubmit}>
+      <form className="grid m-10 bg-gray-200 p-10 " onSubmit={handleSubmit}>
         <h1 className="items-center">New challenge</h1>
         <input
           type="text"
           placeholder="title"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
           placeholder="Description"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <select
-          type="text"
-          placeholder="difficulty"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
-        ><option value="" hidden>
+        >
+          <option value="" hidden>
             Difficulty
           </option>
           <option value="easy">Easy</option>
@@ -113,17 +109,15 @@ function ChallengesAdd() {
         </select>
         <input
           type="date"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={deadline}
           onChange={(e) => setDeadline(e.target.value)}
         />
         <select
-          type="text"
-          placeholder="Work Type"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={workType}
-          onChange={(e) => setWorkType(e.target.value)}>
-          {" "}
+          onChange={(e) => setWorkType(e.target.value)}
+        >
           <option value="" hidden>
             Work Type
           </option>
@@ -134,68 +128,78 @@ function ChallengesAdd() {
         <input
           type="text"
           placeholder="challengeType"
-          className="border border-gray-600 w-full  m-5 p-4 "
+          className="border border-gray-600 w-full m-5 p-4 "
           value={challengeType}
           onChange={(e) => setChallengeType(e.target.value)}
         />
 
         <button
           type="submit"
-          className="border border-gray-600 w-30 bg-indigo-500 text-white p-3  ">
-          create
+          className="border border-gray-600 w-30 bg-indigo-500 text-white p-3"
+        >
+          Create Challenge
         </button>
       </form>
+
+      {message && (
+        <div className="mt-4 p-4 bg-green-100 text-green-800 border border-green-500 rounded">
+          {message}
+        </div>
+      )}
     </>
   );
 }
+
+// ChallengeList Component for displaying challenges
 function ChallengeList() {
   const [challenges, setChallenges] = useState([]);
+  const [displayedContent, setDisplayedContent] = useState(null);
+  const [message, setMessage] = useState(""); // Add message state here
+  const { userData } = useUser();
 
-  // Fetch quotes when the component loads
   useEffect(() => {
     async function fetchChallenges() {
       try {
-        const response = await fetch("http://localhost:5000/api/Challenges");
+        const response = await fetch("http://localhost:5000/api/challenges");
         const data = await response.json();
-        setChallenges(data);
+        const profChallenge = data.filter((c) => c.professorID == userData.id);
+        setChallenges(profChallenge);
       } catch (error) {
         console.error("Error fetching Challenges:", error);
+        setMessage("Failed to fetch challenges");
       }
     }
 
-    fetchChallenges();
-  }, []);
-  const [displayedContent, setDisplayedContent] = useState(null);
+    if (userData) {
+      fetchChallenges();
+    }
+  }, [userData]);
 
-  const handleButtonClick = (Component) => {
-    setDisplayedContent(<Component />);
+  const handleButtonClick = () => {
+    if (!displayedContent) {
+      setDisplayedContent(<ChallengesAdd />);
+    }
   };
+
   const handleDelete = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this challenge?"
-    );
+    const confirm = window.confirm("Are you sure you want to delete this challenge?");
     if (!confirm) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/challenges/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/challenges/${id}`, {
+        method: "DELETE",
+      });
 
       const data = await response.json();
       if (response.ok) {
-        alert(data.message); // "Challenge deleted successfully"
-        // ✅ Remove the deleted challenge from the UI (if you’re using state)
-        // For example, if you have a list of challenges in state:
+        setMessage(data.message); // Set message after deleting
         setChallenges((prev) => prev.filter((c) => c.id !== id));
       } else {
-        alert(data.message || "Error deleting challenge");
+        setMessage(data.message || "Error deleting challenge");
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to connect to the server");
+      setMessage("Failed to connect to the server");
     }
   };
 
@@ -204,10 +208,16 @@ function ChallengeList() {
       <h3 className="text-lg font-bold mb-4">Challenges</h3>
       <button
         className="bg-indigo-600 text-white px-4 py-2 rounded-lg mb-4"
-        onClick={() => handleButtonClick(ChallengesAdd)}>
+        onClick={handleButtonClick}
+      >
         Add Challenge
       </button>
       {displayedContent}
+      {message && (
+        <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-500 rounded">
+          {message}
+        </div>
+      )}
       <table className="w-full table-auto bg-white rounded-lg shadow">
         <thead>
           <tr>
@@ -225,24 +235,17 @@ function ChallengeList() {
             <tr key={c.id} className="border border-gray-300">
               <td className="border border-gray-300 px-4 py-2">{c.id}</td>
               <td className="border border-gray-300 px-4 py-2">{c.title}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.description}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.difficulty}
-              </td>
+              <td className="border border-gray-300 px-4 py-2">{c.description}</td>
+              <td className="border border-gray-300 px-4 py-2">{c.difficulty}</td>
               <td className="border border-gray-300 px-4 py-2">{c.deadline}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.challengeType}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.professorID}
-              </td>
-              <td className="flex p-2 ">
+              <td className="border border-gray-300 px-4 py-2">{c.challengeType}</td>
+              <td className="border border-gray-300 px-4 py-2">{c.professorID}</td>
+              <td className="flex p-2">
                 <button
                   className="text-red-500 px-2 mx-1 py-1 rounded-lg"
-                  onClick={() => handleDelete(c.id)}>
-                  Supprimer
+                  onClick={() => handleDelete(c.id)}
+                >
+                  Delete
                 </button>
               </td>
             </tr>
@@ -252,6 +255,8 @@ function ChallengeList() {
     </section>
   );
 }
+
+// ProfDash component as the dashboard for the professor
 function ProfDash() {
   return (
     <>
