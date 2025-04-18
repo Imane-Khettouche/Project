@@ -19,7 +19,10 @@ function Aside({setDisplayedContent, setSelectedChallenge}) {
       <nav>
         <ul>
           <li className="mb-4">
-            <a href="#" className="text-gray-600 hover:text-indigo-600">
+            <a
+              href="#"
+              className="text-gray-600 hover:text-indigo-600"
+              onClick={() => handleButtonClick(null)}>
               Dashboard
             </a>
           </li>
@@ -57,6 +60,8 @@ Aside.propTypes = {
   setDisplayedContent: PropTypes.func.isRequired,
   setSelectedChallenge: PropTypes.func.isRequired,
 };
+
+
 
 function StudentInfo() {
   const {userData} = useUser();
@@ -181,10 +186,11 @@ ChallengeDetails.propTypes = {
     workType: PropTypes.string.isRequired,
   }),
 };
-function ChallengeBar({setSelectedChallenge}) {
+function ChallengeBar() {
   const [challenges, setChallenges] = useState([]);
   const [filteredChallenges, setFilteredChallenges] = useState([]);
   const [challengeTypes, setChallengeTypes] = useState([]);
+  const [expandedChallenge, setExpandedChallenge] = useState(null); // Track which challenge is expanded
 
   useEffect(() => {
     async function fetchChallenges() {
@@ -193,7 +199,7 @@ function ChallengeBar({setSelectedChallenge}) {
         const data = await response.json();
         setChallenges(data);
 
-        // استخراج أنواع التحديات المختلفة
+        // Extract different challenge types
         const types = [...new Set(data.map((c) => c.challengeType))];
         setChallengeTypes(types);
         setFilteredChallenges(data);
@@ -216,58 +222,102 @@ function ChallengeBar({setSelectedChallenge}) {
     }
   };
 
+  const handleViewMoreClick = (challenge) => {
+    if (expandedChallenge?.id === challenge.id) {
+      setExpandedChallenge(null); // If the clicked challenge is already expanded, collapse it
+    } else {
+      setExpandedChallenge(challenge); // Expand the clicked challenge
+    }
+  };
+
   return (
-    <div className="h-screen p-10 ">
+    <div className="h-screen p-10">
       {/* Filter Buttons */}
       <div className="flex mb-5 space-x-3">
         <button
           onClick={() => filterByType("All")}
-          className="px-6 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-800 transition duration-200">
+          className="px-6 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-800 transition duration-200"
+        >
           All
         </button>
         {challengeTypes.map((type) => (
           <button
             key={type}
             onClick={() => filterByType(type)}
-            className="px-6 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-800 transition duration-200">
+            className="px-6 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-800 transition duration-200"
+          >
             {type}
           </button>
         ))}
       </div>
 
       {/* Challenges Cards */}
-      <div className="flex flex-wrap ">
+      <div className="flex flex-wrap">
         {filteredChallenges.map((c) => (
           <div
             key={c.id}
-            className="bg-white border border-gray-300 rounded-xl shadow-lg p-5 hover:shadow-2xl transition duration-300 cursor-pointer m-2">
-            <h1 className="text-xl font-semibold mb-2">
-              <span className="font-bold">Title:</span> {c.title}
-            </h1>
-            <p className="text-gray-700">
-              <span className="font-bold">Difficulty:</span> {c.difficulty}
-            </p>
-            <p className="text-gray-700">
-              <span className="font-bold">Deadline:</span> {c.deadline}
-            </p>
-            <p className="text-gray-700">
-              <span className="font-bold">Work Type:</span> {c.workType}
-            </p>
-            <p className="text-gray-700">
-              <span className="font-bold">Challenge Type:</span>{" "}
-              {c.challengeType}
-            </p>
-            <button
-              className="mt-4 w-full py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-800 transition duration-200"
-              onClick={() => setSelectedChallenge(c)}>
-              View More..
-            </button>
+            className="bg-white border border-gray-300 rounded-xl shadow-lg p-5 hover:shadow-2xl transition duration-300 cursor-pointer m-2"
+          >
+            {!expandedChallenge || expandedChallenge.id !== c.id ? (
+              <>
+                <h1 className="text-xl font-semibold mb-2">
+                  <span className="font-bold">Title:</span> {c.title}
+                </h1>
+                <p className="text-gray-700">
+                  <span className="font-bold">Difficulty:</span> {c.difficulty}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-bold">Deadline:</span> {c.deadline}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-bold">Work Type:</span> {c.workType}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-bold">Challenge Type:</span>{" "}
+                  {c.challengeType}
+                </p>
+                <button
+                  className="mt-4 w-full py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-800 transition duration-200"
+                  onClick={() => handleViewMoreClick(c)}
+                >
+                  View More..
+                </button>
+              </>
+            ) : (
+              <>
+                <h1 className="text-2xl font-bold mb-4">{c.title}</h1>
+                <p>
+                  <strong>Difficulty:</strong> {c.difficulty}
+                </p>
+                <p>
+                  <strong>Deadline:</strong> {c.deadline}
+                </p>
+                <p>
+                  <strong>Work Type:</strong> {c.workType}
+                </p>
+                <p>
+                  <strong>Challenge Type:</strong> {c.challengeType}
+                </p>
+                <p>
+                  <strong>Description:</strong> {c.description}
+                </p>
+                {/* Optional: Add more detailed information */}
+                <button
+                  className="mt-4 w-full py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-800 transition duration-200"
+                  onClick={() => handleViewMoreClick(c)}
+                >
+                  Close Details
+                </button>
+              </>
+            )}
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+
 
 ChallengeBar.propTypes = {
   setSelectedChallenge: PropTypes.func.isRequired,
@@ -492,10 +542,11 @@ function Invitations() {
     </div>
   );
 }
+function MainContent(){return(<><QuoteBar/></>)}
 export {StudentInfo, QuoteBar, ChallengeBar, ChallengeDetails, ListOfStudent};
 
 function Dashboard() {
-  const [displayedContent, setDisplayedContent] = useState(null);
+  const [displayedContent, setDisplayedContent] = useState(<MainContent />);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
 
   return (
@@ -504,16 +555,14 @@ function Dashboard() {
         setDisplayedContent={setDisplayedContent}
         setSelectedChallenge={setSelectedChallenge}
       />
-      <main className="grid p-6">
-        <QuoteBar />
+      <main className="flex-1 p-6">
         {displayedContent}
-        {selectedChallenge && (
-          <ChallengeDetails challenge={selectedChallenge} />
-        )}
+        {selectedChallenge && <ChallengeDetails challenge={selectedChallenge} />}
       </main>
       <StudentInfo />
     </div>
   );
 }
+
 
 export default Dashboard;
