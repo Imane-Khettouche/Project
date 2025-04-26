@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mediaqueries.css" />
+  </head>
+  <body>
+    <nav id="desktop-nav">
+      <div class="logo">My Portfolio</div>
+      <div>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <nav id="hamburger-nav">
+      <div class="logo">John Doe</div>
+      <div class="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="menu-links">
+          <li><a href="#about" onclick="toggleMenu()">About</a></li>
+          <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
+          <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
+          <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+        </div>
+      </div>
+    </nav>
+    <section id="profile">
+      <div class="section__pic-container">
+        <img src="./assets/profile-pic.png" alt="John Doe profile picture" />
+      </div>
+      <div class="section__text">
+        <p class="section__text__p1">Hello, I'm</p>
+        <h1 class="title">John Doe</h1>
+        <p class="section__text__p2">Frontend Developer</p>
+        <div id="socials-container">
+          <img
+            src="./assets/linkedin.png"
+            alt="My LinkedIn profile"
+            class="icon"
+            onclick="location.href='https://linkedin.com/'"
+          />
+          <img
+            src="./assets/github.png"
+            alt="My Github profile"
+            class="icon"
+            onclick="location.href='https://github.com/'"
+          />
+        </div>
+      </div>
+    </section>
+    <section id="about">
+      <p class="section__text__p1">Get To Know More</p>
+      <h1 class="title">About Me</h1>
+      <div class="section-container">
+        
+        <div class="about-details-container">
+          <div class="about-containers">
+            <div class="details-container">
+              <img
+                src="./assets/experience.png"
+                alt="Experience icon"
+                class="icon"
+              />
+              <h3>Experience</h3>
+              <p>2+ years <br />Frontend Development</p>
+            </div>
+            <div class="details-container">
+              <img
+                src="./assets/education.png"
+                alt="Education icon"
+                class="icon"
+              />
+              <h3>Education</h3>
+              <p>B.Sc. Bachelors Degree<br />M.Sc. Masters Degree</p>
+            </div>
+          </div>
+          <div class="text-container">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic quis
+              reprehenderit et laborum, rem, dolore eum quod voluptate
+              exercitationem nobis, nihil esse debitis maxime facere minus sint
+              delectus velit in eos quo officiis explicabo deleniti dignissimos.
+              Eligendi illum libero dolorum cum laboriosam corrupti quidem,
+              reiciendis ea magnam? Nulla, impedit fuga!
+            </p>
+          </div>
+        </div>
+      </div>
+      <img
+        src="./assets/arrow.png"
+        alt="Arrow icon"
+        class="icon arrow"
+        onclick="location.href='./#experience'"
+      />
+    </section>
+    <section id="skills">
+      <p class="section__text__p1">Explore My</p>
+      <h1 class="title">Skills</h1>
+    
+      <div class="skills-container" id="skills-container">
+        <!-- "+" Button as the first item -->
+        <button class="add-skill-btn" onclick="addSkill()">+</button>
+    
+        <!-- Skill cards -->
+        <div class="skill-card">
+          <h3>HTML</h3>
+          <p>Experienced</p>
+        </div>
+        <div class="skill-card">
+          <h3>CSS</h3>
+          <p>Experienced</p>
+        </div>
+        <div class="skill-card">
+          <h3>JavaScript</h3>
+          <p>Basic</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="projects">
+      <p class="section__text__p1">Challenges Participated</p>
+      <h1 class="title">Challenge List</h1>
+    
+      <div class="challenge-scroll-wrapper">
+        <button class="scroll-btn left" onclick="scrollChallenges(-1)">&#10094;</button>
+    
+        <div class="challenge-bar">
+          <!-- البطاقة 1 -->
+          <div class="challenge-card">
+            <img src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" alt="Challenge 1">
+            <h1><span class="highlight">Title:</span> Solve the Sorting Algorithm</h1>
+            <h3><span class="highlight">Level:</span> Intermediate</h3>
+           
+            <h3><span class="highlight">Description:</span> Practice and master sorting algorithms like Bubble, Merge, and Quick Sort.</h3>
+          </div>
+    
+          <!-- البطاقة 2 -->
+          <div class="challenge-card">
+            <img src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" alt="Challenge 1">
+            <h1><span class="highlight">Title:</span> Solve the Sorting Algorithm</h1>
+            <h3><span class="highlight">Level:</span> Intermediate</h3>
+         
+            <h3><span class="highlight">Description:</span> Practice and master sorting algorithms like Bubble, Merge, and Quick Sort.</h3>
+          </div>
+    
+          <!-- البطاقة 3 -->
+          <div class="challenge-card">
+            <img src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" alt="Challenge 1">
+            <h1><span class="highlight">Title:</span> Solve the Sorting Algorithm</h1>
+            <h3><span class="highlight">Level:</span> Intermediate</h3>
+           
+            <h3><span class="highlight">Description:</span> Practice and master sorting algorithms like Bubble, Merge, and Quick Sort.</h3>
+          </div>
+    
+          <!-- البطاقة 4 -->
+          <div class="challenge-card">
+            <img src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" alt="Challenge 1">
+            <h1><span class="highlight">Title:</span> Solve the Sorting Algorithm</h1>
+            <h3><span class="highlight">Level:</span> Intermediate</h3>
+            
+            <h3><span class="highlight">Description:</span> Practice and master sorting algorithms like Bubble, Merge, and Quick Sort.</h3>
+          </div>
+    
+          <!-- البطاقة 5 -->
+          <div class="challenge-card">
+            <img src="C:\Users\HP\Desktop\Project-main\src\img\1d27c024-6a36-4ab8-91b1-a11d19ea1caf.jpeg" alt="Challenge 1">
+            <h1><span class="highlight">Title:</span> Solve the Sorting Algorithm</h1>
+            <h3><span class="highlight">Level:</span> Intermediate</h3>
+        
+            <h3><span class="highlight">Description:</span> Practice and master sorting algorithms like Bubble, Merge, and Quick Sort.</h3>
+          </div>
+        </div> <!-- نهاية challenge-bar -->
+    
+        <button class="scroll-btn right" onclick="scrollChallenges(1)">&#10095;</button>
+      </div>
+    
+      <img
+        src="./assets/arrow.png"
+        alt="Arrow icon"
+        class="icon arrow"
+        onclick="location.href='./#contact'"
+      />
+    </section>
+    
+       <!-- سكشن Contact موجود بالفعل -->
+       <section id="contact">
+        <p class="section__text__p1">Get in Touch</p>
+        <h1 class="title">Contact Me</h1>
+        <div class="contact-info-upper-container">
+          <div class="contact-info-container">
+            <img src="./assets/email.png" alt="Email icon" class="icon contact-icon email-icon" />
+            <p><a href="mailto:examplemail@gmail.com">Example@gmail.com</a></p>
+          </div>
+          <div class="contact-info-container">
+            <img src="./assets/linkedin.png" alt="LinkedIn icon" class="icon contact-icon" />
+            <p><a href="https://www.linkedin.com">LinkedIn</a></p>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Footer -->
+      <footer>
+        <nav>
+          <div class="nav-links-container">
+            <ul class="nav-links">
+              <li><a href="#about">About</a></li>
+              <li><a href="#experience">Experience</a></li>
+              <li><a href="#projects">Projects</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </nav>
+      </footer>
+  
+      <!-- ✅ JavaScript الخاص بالتمرير -->
+      <script>
+        function scrollChallenges(direction) {
+          const container = document.querySelector('.challenge-bar');
+          const scrollAmount = 300;
+          container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+      </script>
+      
+      <script src="https://unpkg.com/scrollreveal"></script>
+      <script>
+          ScrollReveal().reveal('.section-title', { delay: 200, origin: 'bottom', distance: '50px' });
+      </script>
+      <script>
+        // تمرير التحديات يمين ويسار
+        function scrollChallenges(direction) {
+          const container = document.querySelector('.challenge-bar');
+          const scrollAmount = 300;
+          container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+      
+        // Toggle القائمة في الموبايل
+        function toggleMenu() {
+          const menu = document.querySelector('.menu-links');
+          const icon = document.querySelector('.hamburger-icon');
+          menu.classList.toggle('open');
+          icon.classList.toggle('open');
+        }
+      
+        // ScrollReveal
+        ScrollReveal().reveal('.section-title', {
+          delay: 200,
+          origin: 'bottom',
+          distance: '50px',
+          duration: 800,
+          reset: true,
+        });
+      
+        // إضافة مهارة جديدة
+        function addSkill() {
+          const skillContainer = document.getElementById('skills-container');
+      
+          const newCard = document.createElement('div');
+          newCard.classList.add('skill-card');
+      
+          const skillName = prompt("Enter the name of the skill:");
+          const skillLevel = prompt("Enter the level (e.g., Beginner, Intermediate, Expert):");
+      
+          if (skillName && skillLevel) {
+            newCard.innerHTML = `<h3>${skillName}</h3><p>${skillLevel}</p>`;
+            skillContainer.appendChild(newCard);
+          }
+        }
+      </script>
+      
+    </body>
+  </html>
+  
