@@ -9,10 +9,12 @@ import QuoteRouter from "./routes/quotes.js";
 import UserRouter from "./routes/users.js";
 import ChallengeRouter from "./routes/challenge.js";
 import InviteRouter from "./routes/invitation.js";
+import StudentChallengeRouter from "./routes/StudentChallenge.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express(); //create an express app
+const app = express(); // Create an express app
 app.use(cors()); // Allows requests from other websites (important for frontend)
 app.use(express.json()); // Converts incoming requests to JSON
 
@@ -26,24 +28,39 @@ app.use((req, res, next) => {
 // Signup Route
 app.use("/api/login", loginRouter); // Route to handle login
 app.use("/api/signUp", signUpRouter);
-//uploaded
+// Uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-//Quote
+// Quote
 app.use("/api/quotes", QuoteRouter);
 
-//User
+// User
 app.use("/api/users", UserRouter);
 
-//Challenge
+// Challenge
 app.use("/api/challenges", ChallengeRouter);
 
-//invitation
+// Invitation
 app.use("/api/invite", InviteRouter);
+
+// Add the student challenge routes
+app.use("/api/studentChallenges", StudentChallengeRouter);
+
+// Synchronize the database
+async function syncDatabase() {
+  try {
+    // Use alter: true to modify the tables to match the models without deleting the data
+    await sequelize.sync({alter: true}); // Make sure the tables are updated
+    console.log("✅ All models were synchronized successfully.");
+  } catch (error) {
+    console.error("An error occurred while synchronizing the database:", error);
+  }
+}
+
+syncDatabase();
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-sequelize.sync({alter: true}).then(() => {
-  console.log("✅ MySQL Database Synced");
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

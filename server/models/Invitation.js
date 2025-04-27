@@ -1,34 +1,35 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
 import User from "./User.js";
+import Challenge from "./Challenge.js";
 
-const invite = sequelize.define(
-  "invitations",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-      unique: true,
-    },
-    senderId: {type: DataTypes.STRING, allowNull: false},
-    receiverId: {type: DataTypes.STRING, allowNull: false},
-    challengeId: {type: DataTypes.INTEGER, allowNull: false},
-    status: {
-      type: DataTypes.ENUM("pending", "accepted", "declined"),
-      defaultValue: "pending",
-      allowNull: false,
-    },
+const Invitation = sequelize.define("invitations", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
   },
-  {
-    logging: console.log, // Logs SQL queries
-  }
-);
-
-invite.belongsTo(User, {
-  foreignKey: "senderId",
-  as: "sender",
+  senderId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  receiverId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM("Pending", "Accepted", "Rejected"),
+    defaultValue: "Pending",
+  },
+  challengeId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
-User.hasMany(invite, { foreignKey: "senderId" });
 
-export default invite;
+// Relationships
+Invitation.belongsTo(User, { as: "sender", foreignKey: "senderId" });
+Invitation.belongsTo(User, { as: "receiver", foreignKey: "receiverId" });
+Invitation.belongsTo(Challenge, { as: "challenge", foreignKey: "challengeId" });
+
+export default Invitation;

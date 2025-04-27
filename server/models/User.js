@@ -1,30 +1,63 @@
-import {DataTypes} from "sequelize";
-import sequelize from "../db.js"; // Import UUID v4 for generating IDs
+import { DataTypes } from "sequelize";
+import sequelize from "../db.js";
+
+const generateRoleBasedId = (role) => {
+  const prefixes = {
+    Admin: "adm",
+    Student: "stud",
+    Professor: "prof",
+  };
+
+  const prefix = prefixes[role] || "user";
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}${randomNum}`;
+};
 
 const User = sequelize.define(
-  "users",
+  "User",
   {
     id: {
-      type: DataTypes.UUID, // Use UUID for automatic ID generation
-      defaultValue: DataTypes.UUIDV4, // ✅ Sequelize will handle UUID generation correctly
-      primaryKey: true, // Ensure this is marked as the primary key
+      type: DataTypes.STRING,
+      primaryKey: true,
       allowNull: false,
       unique: true,
     },
-    name: {type: DataTypes.STRING, allowNull: false},
-    email: {type: DataTypes.STRING, unique: true, allowNull: false},
-    password: {type: DataTypes.STRING, allowNull: false},
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     role: {
       type: DataTypes.ENUM("Admin", "Student", "Professor"),
       allowNull: false,
-    },
-    photoUrl: {
-      type: DataTypes.STRING, // URL to the photo (optional)
-      allowNull: true, // This field is optional
+      validate: {
+        notEmpty: true,
+      },
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
+    hooks: {
+      beforeValidate: (user) => {
+        if (!user.id) {
+          user.id = generateRoleBasedId(user.role);
+        }
+      },
+    },
   }
 );
 

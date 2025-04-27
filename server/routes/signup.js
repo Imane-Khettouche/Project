@@ -1,37 +1,23 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import multer from "multer";
-import fs from "fs";
-import path from "path";
-import {fileURLToPath} from "url";
-import User from "../models/User.js"; // Adjust the path if needed
-import {v4 as uuidv4} from "uuid"; // Import UUID v4 for generating IDs
+import User from "../models/User.js"; // Import from index.js
+import Portfolio from "../models/Portfolio.js"; // Import from index.js
+import sequelize from "../db.js";
 
 const signUpRouter = express.Router();
 
-// Fix for ES Modules: Get the current directory path using import.meta.url
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const generateRoleBasedId = (role) => {
+  const prefixes = {
+    Admin: "adm",
+    Student: "stud",
+    Professor: "prof",
+  };
+  const prefix = prefixes[role] || "user";
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}${randomNum}`;
+};
 
-// Ensure the 'uploads' folder exists
-const uploadDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, {recursive: true});
-}
-
-// Setup multer storage options
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save uploaded files to the 'uploads' folder
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`); // File name will be a timestamp + original name
-  },
-});
-
-const upload = multer({storage: storage});
-
-signUpRouter.post("/", upload.single("photo"), async (req, res) => {
+signUpRouter.post("/", async (req, res) => {
   try {
     const {name, email, password, role} = req.body;
     console.log("📨 Signup attempt:", {email});
@@ -47,44 +33,50 @@ signUpRouter.post("/", upload.single("photo"), async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("🔑 Password hashed");
 
-    // Generate a unique ID
-    const userId = uuidv4();
+    // Start a transaction
+    const transaction = await sequelize.transaction();
+    try {
+      // Generate the user ID *before* creating the user
+      const userId = generateRoleBasedId(role);
 
-    // If there is a photo, save its URL
-    let photoUrl = null;
-    if (req.file) {
-      photoUrl = `/uploads/${req.file.filename}`; // Store the relative path to the photo
+      // Create the new user using Sequelize
+      const newUser = await User.create(
+        {
+          id: userId, // Use the generated userId
+          name,
+          email,
+          password: hashedPassword,
+          role,
+        },
+        {transaction}
+      );
+      console.log("✅ New user created:", newUser.get());
+
+      // Create a new portfolio for the user
+      const newPortfolio = await Portfolio.create(
+        {
+          idPortfolio: `port-${userId}`, // Generate a portfolio ID, ensure uniqueness
+          userId: userId, // Use the generated userId
+          privateSection: "", // Provide default values
+          nickname: "",
+          skills: "",
+          challenges: "",
+          socialLinks: "",
+        },
+        {transaction}
+      );
+      console.log("💰 New portfolio created:", newPortfolio.get());
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Respond with success
+      res.status(201).json({message: "Signup successful"}); // Simplified response
+    } catch (error) {
+      // Rollback the transaction
+      await transaction.rollback();
+      throw error; // Re-throw the error
     }
-
-    // Create the new user using Sequelize
-    const newUser = await User.create({
-      id: userId, // Assign the generated ID
-      name,
-      email,
-      password: hashedPassword,
-      role,
-      photoUrl, // Save the photo URL or null if no photo
-    });
-    console.log("✅ New user created:", newUser.get());
-
-    // Respond with success and user data (without the password)
-    const {
-      id,
-      name: newUserName,
-      email: newUserEmail,
-      role: newUserRole,
-      photoUrl: newUserPhotoUrl,
-    } = newUser.get(); // Use .get() to get the instance values
-    res.status(201).json({
-      message: "Signup successful",
-      user: {
-        id,
-        name: newUserName,
-        email: newUserEmail,
-        role: newUserRole,
-        photoUrl: newUserPhotoUrl,
-      },
-    });
   } catch (err) {
     console.error("🔥 Signup error:", err);
     res.status(500).json({message: "Internal server error"});

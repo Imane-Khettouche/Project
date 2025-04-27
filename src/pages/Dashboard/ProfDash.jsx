@@ -10,16 +10,14 @@ function ProfInfo() {
 
   return (
     <div className="grid justify-center bg-gray-100 p-4 rounded">
-      <div className="bg-gray-500 h-50 w-50 rounded-full">
-        <img
-          src={`http://localhost:5000${userData.photoUrl}`} // ✅ no extra `/uploads/`
-          alt="Profile"
-          className="w-32 h-32 object-cover rounded-full"
-        />
+       <div className="grid justify-center  bg-gray-100 p-5">
+      <div className="bg-gray-200 rounded-full w-30 text-5xl flex justify-center place-items-center ">
+        {" "}
+        <p className="place-items-center p-5">{userData.name[0]}</p>
       </div>
-      <h1 className="text-xl">{userData.name}</h1>
-      <h1 className="text-gray-600">{userData.email}</h1>
-    </div>
+      <h1 className="font-bold text-xl">{userData.name}</h1>
+      <p className="">{userData.email}</p>
+    </div> </div>
   );
 }
 

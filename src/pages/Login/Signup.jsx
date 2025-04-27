@@ -1,6 +1,6 @@
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -10,7 +10,6 @@ function Signup() {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [photo, setPhoto] = useState(null); // State for photo
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,22 +28,20 @@ function Signup() {
 
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", role);
-    if (photo) {
-      formData.append("photo", photo); // Append the selected file
-    }
+    const userData = { // تغيير هنا: إنشاء كائن JSON
+      name: name,
+      email: email,
+      password: password,
+      role: role,
+    };
 
     try {
       const response = await axios.post(
         "http://localhost:5000/api/signup",
-        formData,
+        userData, // تغيير هنا: إرسال كائن JSON
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
+            "Content-Type": "application/json", // تغيير هنا: تعيين نوع المحتوى إلى JSON
           },
         }
       );
@@ -79,7 +76,8 @@ function Signup() {
             <p className="mb-6">Already have an account?</p>
             <Link
               to="/login"
-              className="bg-white text-indigo-600 py-2 px-4 rounded-full font-semibold hover:bg-indigo-100">
+              className="bg-white text-indigo-600 py-2 px-4 rounded-full font-semibold hover:bg-indigo-100"
+            >
               Login
             </Link>
           </div>
@@ -130,7 +128,8 @@ function Signup() {
             <select
               className="w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
               value={role}
-              onChange={(e) => setRole(e.target.value)}>
+              onChange={(e) => setRole(e.target.value)}
+            >
               <option value="" hidden>
                 Role
               </option>
@@ -139,19 +138,13 @@ function Signup() {
               <option value="Admin">Admin</option>
             </select>
 
-            {/* File input for photo */}
-            <label className="block">
-              <input
-                type="file"
-                className="mt-1 block w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
-                onChange={(e) => setPhoto(e.target.files[0])}
-              />
-            </label>
+
 
             <button
               type="submit"
               className="w-full py-3 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-              disabled={loading}>
+              disabled={loading}
+            >
               {loading ? "Signing Up..." : "Sign Up"}
             </button>
 

@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import PropTypes from "prop-types";
 import Logo from "../../img/Logo.jpg";
 import dashIcon from "../../img/Dashboard.svg";
 import {useUser} from "../UserContext.jsx";
@@ -10,14 +11,13 @@ function AdminInfo() {
   }
 
   return (
-    <div className="grid justify-center bg-gray-100 p-4 rounded">
-      {/*  <img
-        src={userData.avatar || "/default-avatar.png"}
-        alt="Profile"
-        className="w-20 h-20 rounded-full"
-      />*/}
-      <h1 className="text-xl">{userData.name}</h1>
-      <h1 className="text-gray-600">{userData.email}</h1>
+    <div className="justify-center  bg-gray-100 p-5 h-screen">
+      <div className="bg-gray-200 rounded-full w-30 h-29 text-5xl flex justify-center place-items-center ">
+        {" "}
+        <p className="place-items-center p-5">{userData.name[0]}</p>
+      </div>
+      <h1 className="font-bold text-xl">{userData.name}</h1>
+      <p className="">{userData.email}</p>
     </div>
   );
 }
@@ -133,30 +133,32 @@ function QuoteForm() {
   };
 
   return (
-    <><form
-      className="grid bg-white p-8 rounded-lg shadow-md"
-      onSubmit={handleSubmit}>
-      <h1>Enter the Quote</h1>
-      <textarea
-        rows={3}
-        className="border border-gray-500 mt-3"
-        value={quoteDes}
-        onChange={(e) => setQuote(e.target.value)}
-      />
-      <h1>Enter the Source</h1>
-      <input
-        type="text"
-        className="border border-gray-500 mt-3"
-        value={owner}
-        onChange={(e) => setOwner(e.target.value)}
-      />
-      <button
-        type="submit"
-        className="bg-indigo-600 mt-3 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Submit
-      </button>
-      {message && <p className="mt-4">{message}</p>}
-    </form></>
+    <>
+      <form
+        className="grid bg-white p-8 rounded-lg shadow-md"
+        onSubmit={handleSubmit}>
+        <h1>Enter the Quote</h1>
+        <textarea
+          rows={3}
+          className="border border-gray-500 mt-3"
+          value={quoteDes}
+          onChange={(e) => setQuote(e.target.value)}
+        />
+        <h1>Enter the Source</h1>
+        <input
+          type="text"
+          className="border border-gray-500 mt-3"
+          value={owner}
+          onChange={(e) => setOwner(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="bg-indigo-600 mt-3 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          Submit
+        </button>
+        {message && <p className="mt-4">{message}</p>}
+      </form>
+    </>
   );
 }
 
@@ -290,7 +292,7 @@ function ChallengeList() {
     <section id="challenges" className="mt-10">
       <h3 className="text-lg font-bold mb-4">Challenge Management</h3>
 
-      <table className="w-full table-auto bg-white rounded-lg shadow">
+      <table className="w-full table-auto bg-white rounded-lg shadow overflow-hidden">
         <thead>
           <tr>
             <td className="p-2">ID</td>
@@ -352,7 +354,10 @@ function Aside() {
         <nav>
           <ul>
             <li className="mb-4">
-              <a href="#" className="flex  text-gray-600 hover:text-indigo-600">
+              <a
+                href="#"
+                className="flex  text-gray-600 hover:text-indigo-600"
+                onClick={() => handleButtonClick(Dashboard)}>
                 <img src={dashIcon} className="w-5" /> Dashboard
               </a>
             </li>
@@ -387,13 +392,102 @@ function Aside() {
     </>
   );
 }
+function Dashboard() {
+  const [usersCount, setUsersCount] = useState(0);
+  const [challengesCount, setChallengesCount] = useState(0);
+  const [attemptsCount, setAttemptsCount] = useState(0);
+  const [quotesCount, setQuotesCount] = useState(0);
+  const [loading, setLoading] = useState(true); // Loading state to show while fetching data
+  const [error, setError] = useState(null); // Error state to handle any fetch errors
 
-const AdminDashboard = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userRes = await fetch("http://localhost:5000/api/users");
+        const userData = await userRes.json();
+        setUsersCount(userData.length);
+
+        const challengeRes = await fetch(
+          "http://localhost:5000/api/challenges"
+        );
+        const challengeData = await challengeRes.json();
+        setChallengesCount(challengeData.length);
+
+        const attemptRes = await fetch("http://localhost:5000/api/attempts");
+        const attemptData = await attemptRes.json();
+        setAttemptsCount(attemptData.length);
+
+        const quoteRes = await fetch("http://localhost:5000/api/quotes");
+        const quoteData = await quoteRes.json();
+        setQuotesCount(quoteData.length);
+
+        setLoading(false); // Data is fetched, set loading to false
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data"); // Set error message if fetch fails
+        setLoading(false); // Stop loading even if there's an error
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures this effect runs once when the component mounts
+
+  if (loading) {
+    return <p className="text-center text-gray-600">جارٍ تحميل البيانات...</p>; // Display loading message
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>; // Display error message if fetch fails
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">لوحة التحكم</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card
+          title="👥 إجمالي المستخدمين"
+          count={usersCount}
+          color="bg-blue-100"
+        />
+        <Card
+          title="🧩 إجمالي التحديات"
+          count={challengesCount}
+          color="bg-green-100"
+        />
+        <Card
+          title="📝 إجمالي المحاولات"
+          count={attemptsCount}
+          color="bg-yellow-100"
+        />
+        <Card
+          title="💬 إجمالي الاقتباسات"
+          count={quotesCount}
+          color="bg-purple-100"
+        />
+      </div>
+    </div>
+  );
+}
+
+function Card({title, count}) {
+  return (
+    <div className={`rounded-xl shadow p-6 bg-indigo-500`}>
+      <h2 className="text-lg font-semibold mb-2">{title}</h2>
+      <p className="text-3xl font-bold text-gray-800">{count}</p>
+    </div>
+  );
+}
+Card.propTypes = {
+  title: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+};
+const Main = () => {
   return (
     <div className="flex h-screen">
       <Aside />
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="flex justify-between items-center mb-6">
+      <main className="flex-1  overflow-auto">
+        <div className="flex justify-end items-center ">
           <AdminInfo />
         </div>
       </main>
@@ -401,4 +495,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Main;
