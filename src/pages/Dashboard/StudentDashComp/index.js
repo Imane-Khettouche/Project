@@ -9,4 +9,6 @@ export {default as Portfolio} from "./profile/Portfolio";
 export {default as QuoteBar} from "./dashboard/QuoteBar";
 export {default as StudentInfo} from "./profile/StudentInfo";
 export {default as Setting} from "./setting/Setting";
-export {default as StudentStatsCard} from "./stats/StudentStatsCard";
+export {default as MyChallenges} from "./challenges/MyChallenges";
+export {default as Solution} from "./solution/Solution";
+export {default as StudentStats} from "./stats/StudentStats";

@@ -1,11 +1,11 @@
 import QuoteBar from "./QuoteBar";
-import {StudentStatsCard} from "../index.js";
+import {StudentStats} from "../index.js";
 
 function MainContent() {
   return (
     <>
       <QuoteBar />
-      <StudentStatsCard />
+      <StudentStats />
     </>
   );
 }

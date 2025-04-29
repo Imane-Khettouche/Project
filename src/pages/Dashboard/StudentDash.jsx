@@ -1,4 +1,4 @@
-import Dashboard from './Student Dashboard components/dashboard/Dashboard.jsx';
+import {Dashboard }from './StudentDashComp';
 
 function DashboardPage() {
   return <Dashboard />;

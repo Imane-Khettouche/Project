@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-const StudentStatsCard = ({ studentId }) => {
+const StudentStats = ({ studentId }) => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -61,8 +61,8 @@ const StudentStatsCard = ({ studentId }) => {
   );
 };
 
-StudentStatsCard.propTypes = {
+StudentStats.propTypes = {
   studentId: PropTypes.string.isRequired,
 };
 
-export default StudentStatsCard;
+export default StudentStats;

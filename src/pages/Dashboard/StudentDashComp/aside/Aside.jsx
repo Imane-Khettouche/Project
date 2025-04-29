@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  MyChallenges,
   ChallengeBar,
   Portfolio,
   Invitations,
@@ -32,7 +33,7 @@ function Aside({setDisplayedContent, setSelectedChallenge}) {
           </li>
           <li className="p-3 font-semibold transition-all active:bg-white active:text-indigo-800 active:rounded-l-full hover:rounded-l-full hover:bg-indigo-500 hover:text-indigo-50  mb-4 ">
             <button
-              onClick={() => handleButtonClick(ChallengeBar, true)}
+              onClick={() => handleButtonClick(ChallengeBar)}
               className="cursor-pointer">
               🏆 Challenges
             </button>
@@ -56,6 +57,13 @@ function Aside({setDisplayedContent, setSelectedChallenge}) {
               onClick={() => handleButtonClick(Setting)}
               className="cursor-pointer">
               ⚙ Setting
+            </button>
+          </li>{" "}
+          <li className="p-3 font-semibold transition-all active:bg-white active:text-indigo-800 active:rounded-l-full hover:rounded-l-full hover:bg-indigo-500 hover:text-indigo-50  mb-4 ">
+            <button
+              onClick={() => handleButtonClick(MyChallenges)}
+              className="cursor-pointer">
+              My Challenges
             </button>
           </li>
         </ul>

@@ -2,20 +2,19 @@ import express from "express";
 import Challenge from "../models/Challenge.js";
 import User from "../models/User.js";
 const ChallengeRouter = express.Router();
-//GET
+
+// GET: Get all challenges
 ChallengeRouter.get("/", async (req, res) => {
   try {
     const challenges = await Challenge.findAll();
     res.status(200).json(challenges);
   } catch (error) {
-    console.error("Error fetching challenges :", error);
-    res
-      .status(500)
-      .json({message: "Internal server error", error: error.message});
+    console.error("Error fetching challenges:", error);
+    res.status(500).json({message: "Internal server error", error: error.message});
   }
 });
-// Create a new Challenge
-// Create a new Challenge
+
+// POST: Create a new Challenge
 ChallengeRouter.post("/", async (req, res) => {
   try {
     console.log("sending data:", req.body);
@@ -48,23 +47,21 @@ ChallengeRouter.post("/", async (req, res) => {
       return res.status(400).json({message: "All fields are required!"});
     }
 
-    // ✅ Check difficulty is one of the allowed values
+    // Validate difficulty
     const allowedDifficulties = ["easy", "medium", "hard"];
     if (!allowedDifficulties.includes(difficulty)) {
       return res.status(400).json({message: "Invalid difficulty level!"});
     }
 
-    // ✅ Validate deadline format
+    // Validate deadline format
     if (!deadline || isNaN(new Date(deadline).getTime())) {
-      return res
-        .status(400)
-        .json({message: "Invalid date format for deadline!"});
+      return res.status(400).json({message: "Invalid date format for deadline!"});
     }
 
     // Create the Challenge
     const newChallenge = await Challenge.create(req.body);
 
-    // ✅ Return success message + created Challenge
+    // Return success message + created Challenge
     res.status(201).json({
       message: "Challenge created successfully",
       Challenge: newChallenge,
@@ -75,37 +72,8 @@ ChallengeRouter.post("/", async (req, res) => {
       res.status(400).json({message: "Validation error", errors});
     } else {
       console.error("Error creating Challenge:", error);
-      res
-        .status(400)
-        .json({message: "Failed to create Challenge", error: error.message});
+      res.status(400).json({message: "Failed to create Challenge", error: error.message});
     }
-  }
-});
-
-//delete challenges
-ChallengeRouter.delete("/:id", async (req, res) => {
-  const ChallengeId = parseInt(req.params.id, 10);
-
-  if (isNaN(ChallengeId)) {
-    return res.status(400).json({message: "Invalid Challenge ID"});
-  }
-
-  try {
-    const deletedChallenge = await Challenge.destroy({
-      where: {id: ChallengeId},
-    });
-
-    if (deletedChallenge) {
-      res.json({message: "Challenge deleted successfully"});
-    } else {
-      res.status(404).json({message: "Challenge not found"});
-    }
-  } catch (error) {
-    console.error("❌ Error deleting Challenge:", error);
-    res.status(500).json({
-      message: "Error deleting Challenge",
-      error: error.message,
-    });
   }
 });
 

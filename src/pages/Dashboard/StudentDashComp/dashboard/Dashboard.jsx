@@ -21,6 +21,7 @@ function Dashboard() {
       <Aside
         setDisplayedContent={setDisplayedContent}
         setSelectedChallenge={setSelectedChallenge}
+        displayedContent={displayedContent}  // Pass displayedContent here
       />
       <main className="flex-1 p-6">{displayedContent}</main>
       <StudentInfo />

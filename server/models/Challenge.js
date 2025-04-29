@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 import sequelize from "../db.js";
 import User from "./User.js";
 
@@ -31,6 +31,10 @@ const Challenge = sequelize.define(
       allowNull: false,
     },
     challengeType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    language: {
       type: DataTypes.STRING,
       allowNull: false,
     },

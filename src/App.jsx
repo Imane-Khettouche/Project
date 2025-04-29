@@ -10,7 +10,7 @@ import LandingPage from "./pages/Landing/LandingPage.jsx";
 import Dashboard from "./pages/Dashboard/StudentDash.jsx";
 import Main from "./pages/Dashboard/AdminDash.jsx";
 import ProfDash from "./pages/Dashboard/ProfDash.jsx";
-import Code from "../example.jsx";
+import Code from "./language.jsx";
 
 const router = createBrowserRouter([
   {path: "/", element: <LandingPage />},

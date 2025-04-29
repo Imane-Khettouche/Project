@@ -1,0 +1,109 @@
+import {useEffect, useState} from "react";
+import PropTypes from "prop-types";
+import Logo from "../../img/Logo.jpg";
+import dashIcon from "../../img/Dashboard.svg";
+
+function Dashboard() {
+  const [usersCount, setUsersCount] = useState(0);
+  const [challengesCount, setChallengesCount] = useState(0);
+  const [attemptsCount, setAttemptsCount] = useState(0);
+  const [quotesCount, setQuotesCount] = useState(0);
+  const [loading, setLoading] = useState(true); // Loading state to show while fetching data
+  const [error, setError] = useState(null); // Error state to handle any fetch errors
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userRes = await fetch("http://localhost:5000/api/users");
+        const userData = await userRes.json();
+        setUsersCount(userData.length);
+
+        const challengeRes = await fetch(
+          "http://localhost:5000/api/challenges"
+        );
+        const challengeData = await challengeRes.json();
+        setChallengesCount(challengeData.length);
+
+        const attemptRes = await fetch("http://localhost:5000/api/attempts");
+        const attemptData = await attemptRes.json();
+        setAttemptsCount(attemptData.length);
+
+        const quoteRes = await fetch("http://localhost:5000/api/quotes");
+        const quoteData = await quoteRes.json();
+        setQuotesCount(quoteData.length);
+
+        setLoading(false); // Data is fetched, set loading to false
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data"); // Set error message if fetch fails
+        setLoading(false); // Stop loading even if there's an error
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures this effect runs once when the component mounts
+
+  if (loading) {
+    return <p className="text-center text-gray-600">جارٍ تحميل البيانات...</p>; // Display loading message
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>; // Display error message if fetch fails
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">لوحة التحكم</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card
+          title="👥 إجمالي المستخدمين"
+          count={usersCount}
+          color="bg-blue-100"
+        />
+        <Card
+          title="🧩 إجمالي التحديات"
+          count={challengesCount}
+          color="bg-green-100"
+        />
+        <Card
+          title="📝 إجمالي المحاولات"
+          count={attemptsCount}
+          color="bg-yellow-100"
+        />
+        <Card
+          title="💬 إجمالي الاقتباسات"
+          count={quotesCount}
+          color="bg-purple-100"
+        />
+      </div>
+    </div>
+  );
+}
+
+function Card({title, count}) {
+  return (
+    <div className={`rounded-xl shadow p-6 bg-indigo-500`}>
+      <h2 className="text-lg font-semibold mb-2">{title}</h2>
+      <p className="text-3xl font-bold text-gray-800">{count}</p>
+    </div>
+  );
+}
+Card.propTypes = {
+  title: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+};
+const Main = () => {
+  return (
+    <div className="flex h-screen">
+      <Aside />
+      <main className="flex-1  overflow-auto">
+        <div className="flex justify-end items-center ">
+          <AdminInfo />
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Main;
