@@ -1,17 +1,9 @@
 import PropTypes from "prop-types";
-import {
-  MyChallenges,
-  ChallengeSection,
-  Portfolio,
-  Invitations,
-  MainContent,
-  Setting,
-} from "../index";
 
 function Aside({ setDisplayedContent, setSelectedChallenge }) {
-  const handleButtonClick = (Component) => {
+  const handleButtonClick = (contentKey, data = {}) => {
     setSelectedChallenge(null);
-    setDisplayedContent(<Component />);
+    setDisplayedContent({ key: contentKey, props: data }); // Passing content key and dynamic props
   };
 
   const navItemClass =
@@ -23,33 +15,37 @@ function Aside({ setDisplayedContent, setSelectedChallenge }) {
       <nav>
         <ul className="ml-5 mt-25 text-left text-m font-bold">
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(MainContent)}>
+            <button onClick={() => handleButtonClick("dashboard")}>
               📊 Dashboard
             </button>
           </li>
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(ChallengeSection)}>
-              🏆 Challenges
+            <button onClick={() => handleButtonClick("createChallenge")}>
+              ✏️ Create Challenge
             </button>
           </li>
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(Invitations)}>
-              🔔 Notifications
+            <button onClick={() => handleButtonClick("ChallengeList")}>
+              🏆 Manage Challenges
             </button>
           </li>
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(Portfolio)}>
-              👤 My Portfolio
+            <button
+              onClick={() =>
+                handleButtonClick("solutionsReview")
+              }
+            >
+              🧪 Review Solutions
             </button>
           </li>
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(Setting)}>
-              ⚙ Setting
+            <button onClick={() => handleButtonClick("profile")}>
+              👨‍🏫 My Profile
             </button>
           </li>
           <li className={navItemClass}>
-            <button onClick={() => handleButtonClick(MyChallenges)}>
-              🎯 My Challenges
+            <button onClick={() => handleButtonClick("help")}>
+              ⚙ Help / Settings
             </button>
           </li>
         </ul>

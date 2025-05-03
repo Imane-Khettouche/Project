@@ -1,61 +1,77 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 
-function ListOfStudent({ senderId, challengeId }) {
-  const [users, setUsers] = useState([]);
+function ListOfStudent({
+  challengeId,
+  setDisplayedContent,
+  setSelectedChallenge,
+}) {
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    async function fetchUsers() {
+    async function fetchStudents() {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
-        const data = await response.json();
-        const studentUsers = data.filter((u) => u.role === "Student");
-        setUsers(studentUsers);
+        const response = await fetch(
+          `http://localhost:5000/api/studentChallenges/`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch student challenge data");
+        }
+        const studentChallenges = await response.json();
+
+        const studentIds = studentChallenges
+          .filter((c) => c.challengeId === challengeId)
+          .map((c) => c.studentId);
+
+        const usersResponse = await fetch(`http://localhost:5000/api/users/`);
+        if (!usersResponse.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const users = await usersResponse.json();
+
+        const studentsInfo = users.filter((user) =>
+          studentIds.includes(user.id)
+        );
+
+        setStudents(studentsInfo);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching students:", error);
+        setStudents([]);
       }
     }
-    fetchUsers();
-  }, []);
 
-  const handleSendInvite = async (receiverId) => {
-    try {
-      const response = await fetch("http://localhost:5000/api/invite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          senderId,
-          receiverId,
-          challengeId, // String not number, so we pass as it is
-        }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert("✅ Invitation sent to student!");
-      } else {
-        alert("❌ Error: " + result.message);
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      alert("❌ Network error occurred");
+    if (challengeId) {
+      fetchStudents();
     }
+  }, [challengeId]);
+
+  const handleButtonClick = (contentKey, data = {}) => {
+    setSelectedChallenge(null);
+    setDisplayedContent({key: contentKey, props: data});
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Invite a student</h2>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id} className="flex justify-between items-center mb-2">
-            <span>{user.name}</span>
+    <div className="p-2 ">
+      <ul className="space-y-4">
+        {students.map((student) => (
+          <li
+            key={student.id}
+            className="flex justify-between items-center p-1  transition-all ease-in-out duration-300">
+            <div className="flex justify-between">
+              <span className="text-xl mr-5 font-semibold text-indigo-700">
+                {student.name}
+              </span>
+              <span className="text-xl text-gray-500">{student.email}</span>
+            </div>
             <button
-              onClick={() => handleSendInvite(user.id)}
-              className="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600"
-            >
-              Invite
+              className="text-indigo-600 cursor-pointer font-medium "
+              onClick={() =>
+                handleButtonClick("solution", {
+                  challengeId,
+                  studentId: student.id,
+                })
+              }>
+              Submitted Solution
             </button>
           </li>
         ))}
@@ -65,8 +81,9 @@ function ListOfStudent({ senderId, challengeId }) {
 }
 
 ListOfStudent.propTypes = {
-  senderId: PropTypes.string.isRequired,
-  challengeId: PropTypes.string.isRequired, // <-- هنا صححته لأنه String مش Number
+  challengeId: PropTypes.number.isRequired,
+  setDisplayedContent: PropTypes.func.isRequired,
+  setSelectedChallenge: PropTypes.func.isRequired,
 };
 
 export default ListOfStudent;

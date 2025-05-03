@@ -1,7 +1,7 @@
-import{ Aside ,Profile}from "../index";
+import{ Aside ,Profile}from "../";
 
 
-function Dashboard() {
+function DashboardAd() {
   return (
     <div className="flex h-screen">
       <Aside />
@@ -16,4 +16,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardAd;

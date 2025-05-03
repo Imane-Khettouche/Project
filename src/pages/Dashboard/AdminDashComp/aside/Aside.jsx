@@ -1,5 +1,5 @@
-import { Dashboard,ChallengeList,UserList,QuotesList } from "../index";
-import  useState from "react";
+import  { useState } from 'react';
+import { DashboardAd, ChallengeList, UserList, QuotesList } from "../index"; // Make sure the path is correct
 
 function Aside() {
   const [displayedContent, setDisplayedContent] = useState(null);
@@ -12,23 +12,28 @@ function Aside() {
     <>
       <aside className="w-1/5 bg-white p-5 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">
-          <img  width="250px" />
+          {/* Corrected img tag.  Make sure the path is correct. */}
+          <img src="/path/to/your/logo.png" alt="Logo" width="250px" />
         </h2>
         <nav>
           <ul>
             <li className="mb-4">
               <a
                 href="#"
-                className="flex  text-gray-600 hover:text-indigo-600"
-                onClick={() => handleButtonClick(Dashboard)}>
-                <img  className="w-5" /> Dashboard
+                className="flex text-gray-600 hover:text-indigo-600"
+                onClick={() => handleButtonClick(DashboardAd)}
+              >
+                {/* Corrected img tag. Make sure the path is correct. */}
+                <img src="/path/to/dashboard_icon.png" alt="DashboardAd Icon" className="w-5 mr-2" />
+                Dashboard
               </a>
             </li>
             <li className="mb-4">
               <a
                 href="#"
                 className="text-gray-600 hover:text-indigo-600"
-                onClick={() => handleButtonClick(ChallengeList)}>
+                onClick={() => handleButtonClick(ChallengeList)}
+              >
                 🏆 Challenges
               </a>
             </li>
@@ -36,7 +41,8 @@ function Aside() {
               <a
                 href="#"
                 className="text-gray-600 hover:text-indigo-600"
-                onClick={() => handleButtonClick(UserList)}>
+                onClick={() => handleButtonClick(UserList)}
+              >
                 👤 User Management
               </a>
             </li>
@@ -44,7 +50,8 @@ function Aside() {
               <a
                 href="#quotes"
                 className="text-gray-600 hover:text-indigo-600"
-                onClick={() => handleButtonClick(QuotesList)}>
+                onClick={() => handleButtonClick(QuotesList)}
+              >
                 💬 Quote Management
               </a>
             </li>
@@ -55,4 +62,5 @@ function Aside() {
     </>
   );
 }
+
 export default Aside;

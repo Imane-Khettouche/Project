@@ -1,7 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
-import User from "./User.js";
-import Challenge from "./Challenge.js";
 
 const Invitation = sequelize.define("invitations", {
   id: {
@@ -26,10 +24,5 @@ const Invitation = sequelize.define("invitations", {
     allowNull: false,
   },
 });
-
-// Relationships
-Invitation.belongsTo(User, { as: "sender", foreignKey: "senderId" });
-Invitation.belongsTo(User, { as: "receiver", foreignKey: "receiverId" });
-Invitation.belongsTo(Challenge, { as: "challenge", foreignKey: "challengeId" });
 
 export default Invitation;

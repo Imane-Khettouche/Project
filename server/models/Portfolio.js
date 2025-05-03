@@ -44,7 +44,4 @@ Portfolio.init(
   }
 );
 
-Portfolio.belongsTo(User, {foreignKey: "userId", as: "owner"});
-User.hasOne(Portfolio, {foreignKey: "userId", as: "portfolio"});
-
 export default Portfolio;

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import Aside from "../aside";
-import StudentInfo from "../profile/StudentInfo";
+import {useState, useEffect} from "react";
+import Aside from "../aside/Aside";
 import MainContent from "./MainContent";
 import ChallengeDetails from "../challenges/ChallengeDetails";
 
@@ -10,7 +9,12 @@ function Dashboard() {
 
   useEffect(() => {
     if (selectedChallenge) {
-      setDisplayedContent(<ChallengeDetails challenge={selectedChallenge} />);
+      setDisplayedContent(
+        <ChallengeDetails
+          challenge={selectedChallenge}
+          setDisplayedContent={setDisplayedContent}
+        />
+      );
     } else {
       setDisplayedContent(<MainContent />);
     }
@@ -21,10 +25,9 @@ function Dashboard() {
       <Aside
         setDisplayedContent={setDisplayedContent}
         setSelectedChallenge={setSelectedChallenge}
-        displayedContent={displayedContent}  // Pass displayedContent here
+        displayedContent={displayedContent}
       />
       <main className="flex-1 p-6">{displayedContent}</main>
-      <StudentInfo />
     </div>
   );
 }

@@ -1,113 +1,67 @@
-import { useState } from "react";
-import { useUser } from "../../../UserContext.jsx";
 import PropTypes from "prop-types";
-import { toast } from "react-toastify";
-import ListOfStudent from "./ListOfStudent.jsx";
+import JoinToChallenge from "./JoinToChallenge";
+import {useUser} from "../../../UserContext";
 
-export default function ChallengeDetails({ challenge }) {
-  const { userData } = useUser();
-  const [showList, setShowList] = useState(false);
-  const [isJoined, setIsJoined] = useState(false);
+// Helper function to format date
+function formatDate(deadline) {
+  const date = new Date(deadline);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 
-  if (!challenge) return null;
-
-  const handleJoinChallenge = async () => {
-    if (!userData?.id) {
-      alert("You must be logged in to join a challenge");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/studentChallenges/join",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            studentId: userData.id,
-            challengeId: challenge.id, // هنا عادي نخليه رقم لأنه studentChallenges يستخدم id كرقم
-            status: "in_progress",
-          }),
-        }
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to join challenge");
-      }
-
-      if (data.message === "Successfully joined the challenge") {
-        setIsJoined(true);
-        toast.success("Successfully joined the challenge!");
-      } else {
-        toast.error(data.message || "Failed to join the challenge.");
-      }
-    } catch (error) {
-      console.error("Error joining challenge:", error);
-      toast.error(`Error: ${error.message}`);
-    }
-  };
-
-  const { title, description, difficulty, workType, deadline, challengeType } =
-    challenge;
-
+// Details component for rendering challenge information
+function Details({challenge}) {
   return (
-    <div className="gap-4 m-4">
-      <div className="grid border border-indigo-100 shadow-2xl shadow-indigo-300 rounded-2xl p-4 text-xl">
-        <ChallengeInfo label="Title" value={title} />
-        <ChallengeInfo label="Description" value={description} />
-        <ChallengeInfo label="Difficulty" value={difficulty} />
-
-        <div className="flex items-center">
-          <ChallengeInfo label="Work Type" value={workType} />
-          {workType.toLowerCase() === "team" && (
-            <button
-              className="ml-6 border text-indigo-700 cursor-pointer hover:bg-indigo-900 hover:text-white rounded-2xl h-12 px-6"
-              onClick={() => setShowList((prev) => !prev)}
-            >
-              {showList ? "Hide List" : "Invite"}
-            </button>
-          )}
-        </div>
-
-        <ChallengeInfo label="Deadline" value={deadline} />
-        <ChallengeInfo label="Type" value={challengeType} />
-
-        {!isJoined ? (
-          <button
-            onClick={handleJoinChallenge}
-            className="mt-4 border bg-indigo-700 text-white rounded-2xl p-3 w-50"
-          >
-            Join Challenge
-          </button>
-        ) : (
-          <p className="mt-4 text-green-500 font-semibold">
-            You have successfully joined this challenge!
-          </p>
-        )}
+    <div className="grid gap-4">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-semibold text-indigo-700">
+          {challenge.title}
+        </h1>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-red-100 text-red-800">
+          Deadline: {formatDate(challenge.deadline)}
+        </span>
       </div>
-
-      {showList && (
-        <div className="border border-indigo-100 shadow-2xl shadow-indigo-300 rounded-2xl p-4 mt-4">
-          <ListOfStudent senderId={userData.id} challengeId={String(challenge.id)} />
-          {/* هنا حولت challenge.id إلى String */}
-        </div>
-      )}
+      <p className="text-gray-700 leading-relaxed">{challenge.description}</p>
+      <div className="flex flex-wrap gap-2 text-sm font-medium text-gray-600">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+          Difficulty: {challenge.difficulty}
+        </span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">
+          Language: {challenge.language}
+        </span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800">
+          Type: {challenge.challengeType}
+        </span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800">
+          Work Type: {challenge.workType}
+        </span>
+      </div>
     </div>
   );
 }
 
-function ChallengeInfo({ label, value }) {
+// Main ChallengeDetails component
+function ChallengeDetails({challenge}) {
+  // Use the user data from the context
+  const {userData} = useUser();
+
   return (
-    <p className="m-3">
-      <strong className="text-indigo-700">{label}:</strong>
-      <br /> {value}
-    </p>
+   <>
+        <div className="m-6 mb-6 p-6 h-full bg-white rounded-lg shadow-md border border-gray-200">
+          <Details challenge={challenge} />
+         
+            <JoinToChallenge challenge={challenge} studentId={userData?.id} />
+
+        </div>
+      </>
   );
 }
 
+// PropTypes for ChallengeDetails component
 ChallengeDetails.propTypes = {
   challenge: PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -115,12 +69,24 @@ ChallengeDetails.propTypes = {
     description: PropTypes.string.isRequired,
     difficulty: PropTypes.string.isRequired,
     deadline: PropTypes.string.isRequired,
-    challengeType: PropTypes.string.isRequired,
+    challengeType: PropTypes.string, // Optional
     workType: PropTypes.string.isRequired,
-  }),
+    language: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
-ChallengeInfo.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+// PropTypes for Details component
+Details.propTypes = {
+  challenge: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    difficulty: PropTypes.string.isRequired,
+    deadline: PropTypes.string.isRequired,
+    challengeType: PropTypes.string, // Optional
+    workType: PropTypes.string.isRequired,
+    language: PropTypes.string.isRequired,
+  }).isRequired,
 };
+
+export default ChallengeDetails;

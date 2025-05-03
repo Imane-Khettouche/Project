@@ -1,13 +1,15 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
 import User from "./User.js";
 import Challenge from "./Challenge.js";
+
 const StudentChallenge = sequelize.define(
   "StudentChallenge",
   {
     studentId: {
       type: DataTypes.STRING,
       allowNull: false,
+      primaryKey: true, // Part of the composite primary key
       references: {
         model: User,
         key: "id",
@@ -17,6 +19,7 @@ const StudentChallenge = sequelize.define(
     challengeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true, // Part of the composite primary key
       references: {
         model: Challenge,
         key: "id",
@@ -28,8 +31,8 @@ const StudentChallenge = sequelize.define(
       allowNull: false,
     },
     score: {
-      type: DataTypes.FLOAT, // نضيف score هنا
-      defaultValue: 0, // يكون مبدئيا 0
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
   },
   {
@@ -38,18 +41,5 @@ const StudentChallenge = sequelize.define(
     timestamps: true,
   }
 );
-
-// 👇 العلاقات (Many-to-Many بين الطلاب والتحديات)
-User.belongsToMany(Challenge, {
-  through: StudentChallenge,
-  as: "joinedChallenges",
-  foreignKey: "studentId",
-});
-
-Challenge.belongsToMany(User, {
-  through: StudentChallenge,
-  as: "students",
-  foreignKey: "challengeId",
-});
 
 export default StudentChallenge;

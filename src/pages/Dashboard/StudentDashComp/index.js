@@ -1,8 +1,8 @@
-export {default as Aside} from "./aside";
+export {default as Aside} from "./aside/Aside";
 export {default as ChallengeBar} from "./challenges/ChallengeBar";
 export {default as ChallengeDetails} from "./challenges/ChallengeDetails";
 export {default as ListOfStudent} from "./challenges/ListOfStudent";
-export {default as Dashboard} from "./dashboard/Dashboard";
+export {default as DashboardStud} from "./dashboard/DashboardStud";
 export {default as Invitations} from "./invitations/Invitations";
 export {default as MainContent} from "./dashboard/MainContent";
 export {default as Portfolio} from "./profile/Portfolio";
@@ -11,4 +11,4 @@ export {default as StudentInfo} from "./profile/StudentInfo";
 export {default as Setting} from "./setting/Setting";
 export {default as MyChallenges} from "./challenges/MyChallenges";
 export {default as Solution} from "./solution/Solution";
-export {default as StudentStats} from "./stats/StudentStats";
+export {default as ChallengeSection} from "./challenges/ChallengeSection";

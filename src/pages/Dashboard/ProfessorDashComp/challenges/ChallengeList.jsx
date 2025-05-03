@@ -1,11 +1,22 @@
-import {useState, useEffect} from "react";
-import {useUser} from "../../../UserContext.jsx";
-import ChallengesAdd from "./ChallengesAdd.jsx";
+import { useState, useEffect } from "react";
+import { useUser } from "../../../UserContext.jsx";
+import { ChallengeDetails } from "../../StudentDashComp/index.js";
+
+function formatDate(deadline) {
+  const date = new Date(deadline);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 function ChallengeList() {
   const [challenges, setChallenges] = useState([]);
   const [displayedContent, setDisplayedContent] = useState(null);
-  const [message, setMessage] = useState(""); // Add message state here
-  const {userData} = useUser();
+  const [message, setMessage] = useState("");
+  const { userData } = useUser();
 
   useEffect(() => {
     async function fetchChallenges() {
@@ -25,12 +36,6 @@ function ChallengeList() {
     }
   }, [userData]);
 
-  const handleButtonClick = () => {
-    if (!displayedContent) {
-      setDisplayedContent(<ChallengesAdd />);
-    }
-  };
-
   const handleDelete = async (id) => {
     const confirm = window.confirm(
       "Are you sure you want to delete this challenge?"
@@ -44,10 +49,9 @@ function ChallengeList() {
           method: "DELETE",
         }
       );
-
       const data = await response.json();
       if (response.ok) {
-        setMessage(data.message); // Set message after deleting
+        setMessage(data.message);
         setChallenges((prev) => prev.filter((c) => c.id !== id));
       } else {
         setMessage(data.message || "Error deleting challenge");
@@ -58,62 +62,76 @@ function ChallengeList() {
     }
   };
 
+  const truncateDescription = (desc) => {
+    const words = desc.split(" ");
+    return words.length > 3 ? words.slice(0, 3).join(" ") + "..." : desc;
+  };
+
+  const handleViewDetails = (challenge) => {
+    setDisplayedContent(<ChallengeDetails challenge={challenge} />);
+  };
+
   return (
-    <section id="quotes" className="mt-10">
-      <h3 className="text-lg font-bold mb-4">Challenges</h3>
-      <button
-        className="bg-indigo-600 text-white px-4 py-2 rounded-lg mb-4"
-        onClick={handleButtonClick}>
-        Add Challenge
-      </button>
-      {displayedContent}
+    <section id="challenges" className="mt-10 px-4">
+      <h3 className="text-xl font-semibold text-indigo-700 mb-6">Challenges</h3>
+
       {message && (
-        <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-500 rounded">
+        <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-500 rounded-lg">
           {message}
         </div>
       )}
-      <table className="w-full table-auto bg-white rounded-lg shadow">
-        <thead>
-          <tr>
-            <td className="p-2">ID</td>
-            <td className="p-2">Title</td>
-            <td className="p-2">Description</td>
-            <td className="p-2">Difficulty</td>
-            <td className="p-2">Deadline</td>
-            <td className="p-2">Challenge Type</td>
-            <td className="p-2">Professor ID</td>
-          </tr>
-        </thead>
-        <tbody>
-          {challenges.map((c) => (
-            <tr key={c.id} className="border border-gray-300">
-              <td className="border border-gray-300 px-4 py-2">{c.id}</td>
-              <td className="border border-gray-300 px-4 py-2">{c.title}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.description}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.difficulty}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">{c.deadline}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.challengeType}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {c.professorID}
-              </td>
-              <td className="flex p-2">
-                <button
-                  className="text-red-500 px-2 mx-1 py-1 rounded-lg"
-                  onClick={() => handleDelete(c.id)}>
-                  Delete
-                </button>
-              </td>
+
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="w-full table-auto">
+          <thead className="bg-indigo-50">
+            <tr>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">ID</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Title</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Description</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Difficulty</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Deadline</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Challenge Type</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Actions</th>
+              <th className="p-3 text-left text-sm font-medium text-indigo-700">Details</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {challenges.map((c) => (
+              <tr key={c.id} className="border-b border-gray-300">
+                <td className="p-3 text-sm text-gray-700">{c.id}</td>
+                <td className="p-3 text-sm text-gray-700">{c.title}</td>
+                <td className="p-3 text-sm text-gray-700">{truncateDescription(c.description)}</td>
+                <td className="p-3 text-sm text-gray-700">{c.difficulty}</td>
+                <td className="p-3 text-sm text-gray-700">{formatDate(c.deadline)}</td>
+                <td className="p-3 text-sm text-gray-700">{c.challengeType}</td>
+                <td className="p-3 text-sm text-gray-700">
+                  <button
+                    onClick={() => handleDelete(c.id)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </td>
+                <td className="p-3 text-sm text-gray-700">
+                  <button
+                    onClick={() => handleViewDetails(c)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {displayedContent && (
+          <div className="mt-6">
+            {displayedContent}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
+
 export default ChallengeList;

@@ -29,12 +29,7 @@ function Login() {
         sessionStorage.setItem("userData", JSON.stringify(data));
         setUserData(data.user);
 
-        const role = data.user.role;
-        if (role === "Admin") navigate("/AdDash");
-        else if (role === "Student") navigate("/StudentDash");
-        else navigate("/ProfDash");
-      } else {
-        setError(data.message || "Invalid login credentials. Please try again.");
+        navigate("/Dashboard");
       }
     } catch (err) {
       console.error("🔥 Fetch Error during login:", err);

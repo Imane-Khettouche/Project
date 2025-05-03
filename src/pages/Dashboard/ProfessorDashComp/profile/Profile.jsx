@@ -1,21 +1,33 @@
-import {useUser} from "../../../UserContext.jsx";
+import { useUser } from "../../../UserContext.jsx";
+
 function Profile() {
-  const {userData} = useUser();
+  const { userData } = useUser();
+
   if (!userData) {
     return <p className="text-center mt-5 text-red-500">There is no info</p>;
   }
 
   return (
-    <div className="grid justify-center bg-gray-100 p-4 rounded">
-      <div className="grid justify-center  bg-gray-100 p-5">
-        <div className="bg-gray-200 rounded-full w-30 text-5xl flex justify-center place-items-center ">
-          {" "}
-          <p className="place-items-center p-5">{userData.name[0]}</p>
+    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-6">
+      {/* Profile Image */}
+      <div className="flex justify-center mb-6">
+        <div className="w-32 h-32 bg-indigo-200 rounded-full flex items-center justify-center text-4xl font-bold text-white">
+          {userData.name[0]}
         </div>
-        <h1 className="font-bold text-xl">{userData.name}</h1>
-        <p className="">{userData.email}</p>
-      </div>{" "}
+      </div>
+
+      {/* User Info */}
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold text-gray-800">{userData.name}</h1>
+        <p className="text-gray-600">{userData.email}</p>
+      </div>
+
+      {/* Additional Info (Optional) */}
+      <div className="mt-6 text-center">
+        {/* You can add more information like Bio, Phone, etc. */}
+      </div>
     </div>
   );
 }
+
 export default Profile;

@@ -54,14 +54,4 @@ const Challenge = sequelize.define(
     timestamps: true,
   }
 );
-
-Challenge.belongsTo(User, {
-  foreignKey: "professorID",
-  as: "creator",
-});
-User.hasMany(Challenge, {
-  foreignKey: "professorID",
-  as: "createdChallenges",
-});
-
 export default Challenge;

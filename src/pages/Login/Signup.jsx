@@ -1,6 +1,6 @@
-import { useState } from "react";
+import {useState} from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -28,7 +28,8 @@ function Signup() {
 
     setLoading(true);
 
-    const userData = { // تغيير هنا: إنشاء كائن JSON
+    const userData = {
+      // تغيير هنا: إنشاء كائن JSON
       name: name,
       email: email,
       password: password,
@@ -48,13 +49,7 @@ function Signup() {
       console.log(response.data);
 
       // Navigate to the appropriate dashboard based on the role
-      if (role === "Admin") {
-        navigate("/AdDash");
-      } else if (role === "Student") {
-        navigate("/StudentDash");
-      } else if (role === "Professor") {
-        navigate("/ProfDash");
-      }
+      navigate("/Dashboard");
     } catch (err) {
       console.error(err);
       setError(
@@ -76,8 +71,7 @@ function Signup() {
             <p className="mb-6">Already have an account?</p>
             <Link
               to="/login"
-              className="bg-white text-indigo-600 py-2 px-4 rounded-full font-semibold hover:bg-indigo-100"
-            >
+              className="bg-white text-indigo-600 py-2 px-4 rounded-full font-semibold hover:bg-indigo-100">
               Login
             </Link>
           </div>
@@ -128,8 +122,7 @@ function Signup() {
             <select
               className="w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
               value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
+              onChange={(e) => setRole(e.target.value)}>
               <option value="" hidden>
                 Role
               </option>
@@ -138,13 +131,10 @@ function Signup() {
               <option value="Admin">Admin</option>
             </select>
 
-
-
             <button
               type="submit"
               className="w-full py-3 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-              disabled={loading}
-            >
+              disabled={loading}>
               {loading ? "Signing Up..." : "Sign Up"}
             </button>
 
