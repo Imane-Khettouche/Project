@@ -19,8 +19,6 @@ function MainContent({displayedContent}) {
       case "solution":
         return (
           <SolutionEvaluation
-            challengeId={displayedContent?.props?.challengeId}
-            studentId={displayedContent?.props?.studentId}
           />
         );
       case "solutionsReview":

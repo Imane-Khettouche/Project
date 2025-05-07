@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 import {useUser} from "../../../UserContext";
-import ListOfStudent from "./ListOfStudent";
+import ListOfStudent from "../../ProfessorDashComp/solution/ListOfStudent";
 import Solution from "../solution/Solution";
 
 function JoinToChallenge({challenge}) {

@@ -45,10 +45,11 @@ function ListOfStudent({
     }
   }, [challengeId]);
 
-  const handleButtonClick = (contentKey, data = {}) => {
+ const handleButtonClick = (contentKey, data = {}) => {
     setSelectedChallenge(null);
-    setDisplayedContent({key: contentKey, props: data});
+    setDisplayedContent({ key: contentKey, props: data }); // Passing content key and dynamic props
   };
+
 
   return (
     <div className="p-2 ">
@@ -65,13 +66,10 @@ function ListOfStudent({
             </div>
             <button
               className="text-indigo-600 cursor-pointer font-medium "
-              onClick={() =>
-                handleButtonClick("solution", {
-                  challengeId,
-                  studentId: student.id,
-                })
-              }>
-              Submitted Solution
+onClick={() =>
+  handleButtonClick("solution", { studentId: student.id, challengeId })
+}
+>              Submitted Solution
             </button>
           </li>
         ))}

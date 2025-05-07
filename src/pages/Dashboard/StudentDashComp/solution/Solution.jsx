@@ -78,7 +78,7 @@ const Solution = ({challenge}) => {
           language={languageMap[challenge.language] || "javascript"}
           value={solutionContent}
           onChange={(value) => setSolutionContent(value || "")}
-          theme="vs-light"
+          theme="vs-dark"
           options={{fontSize: 14}}
         />
         <button

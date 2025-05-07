@@ -1,7 +1,7 @@
 export {default as Aside} from "./aside/Aside";
 export {default as ChallengeBar} from "./challenges/ChallengeBar";
 export {default as ChallengeDetails} from "./challenges/ChallengeDetails";
-export {default as ListOfStudent} from "./challenges/ListOfStudent";
+export {default as ListOfStudent} from "../ProfessorDashComp/solution/ListOfStudent";
 export {default as DashboardStud} from "./dashboard/DashboardStud";
 export {default as Invitations} from "./invitations/Invitations";
 export {default as MainContent} from "./dashboard/MainContent";
