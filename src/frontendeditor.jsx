@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import { useState } from "react";
 import Editor from "@monaco-editor/react";
 
 export default function Code() {
@@ -6,43 +6,27 @@ export default function Code() {
   const [css, setCss] = useState("h1 { color: red; }");
   const [js, setJs] = useState("console.log('Hello from JS');");
   const [activeEditor, setActiveEditor] = useState("html");
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState("");
 
-  const JDoodleAPI = "https://api.jdoodle.com/v1/execute"; // URL للـ JDoodle API
- const clientId = process.env.REACT_APP_JDOODLE_CLIENT_ID;
-const clientSecret = process.env.REACT_APP_JDOODLE_CLIENT_SECRET;
-
-  // إعداد البيانات لإرسالها إلى JDoodle
-  const executeCode = async () => {
-    const code = js; // على سبيل المثال، يمكن اختيار لغة JavaScript
-    const data = {
-      script: code,
-      language: "javascript", // اختر اللغة المناسبة (مثلاً JavaScript)
-      versionIndex: "0", // 0 يعني النسخة الافتراضية للغة
-      clientId: clientId, // معرّف العميل
-      clientSecret: clientSecret, // السر الخاص بالعميل
-    };
-
+  const handleRunCode = async () => {
     try {
-      const response = await fetch(JDoodleAPI, {
+      const response = await fetch("http://localhost:5000/api/run", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: js, // You might want to handle the selected language here (html/css/js)
+          language: "javascript", // Adjust according to the selected language
+          versionIndex: "0",
+        }),
       });
+
       const result = await response.json();
       setLogs(result.output || "No output");
     } catch (error) {
-      console.error("Error executing code:", error);
-      setLogs("Error executing code");
+      console.error(error);
+      setLogs("Failed to execute code");
     }
   };
-
-  useEffect(() => {
-    // يمكن إضافة trigger لتشغيل الكود بعد تغيير الـ js
-    executeCode();
-  }, [js]);
 
   return (
     <div className="p-4 m-10">
@@ -59,40 +43,27 @@ const clientSecret = process.env.REACT_APP_JDOODLE_CLIENT_SECRET;
         ))}
       </div>
 
-      <div>
-        {activeEditor === "html" && (
-          <Editor
-            height="200px"
-            language="html"
-            value={html}
-            onChange={setHtml}
-            theme="vs-dark"
-          />
-        )}
-        {activeEditor === "css" && (
-          <Editor
-            height="200px"
-            language="css"
-            value={css}
-            onChange={setCss}
-            theme="vs-dark"
-          />
-        )}
-        {activeEditor === "js" && (
-          <Editor
-            height="200px"
-            language="javascript"
-            value={js}
-            onChange={setJs}
-            theme="vs-dark"
-          />
-        )}
+      {activeEditor === "html" && (
+        <Editor height="200px" language="html" value={html} onChange={setHtml} theme="vs-dark" />
+      )}
+      {activeEditor === "css" && (
+        <Editor height="200px" language="css" value={css} onChange={setCss} theme="vs-dark" />
+      )}
+      {activeEditor === "js" && (
+        <Editor height="200px" language="javascript" value={js} onChange={setJs} theme="vs-dark" />
+      )}
+
+      <div className="mt-4 flex justify-end">
+        <button
+          onClick={handleRunCode}
+          className="px-4 py-2 bg-green-600 text-white rounded shadow">
+          Run JS Code
+        </button>
       </div>
 
-      {/* عرض النتائج من JDoodle */}
       <div className="mt-4 border rounded overflow-hidden">
-        <div className="bg-white p-4" title="Live Output">
-          {logs && <pre>{logs}</pre>}
+        <div className="bg-white p-4" title="Output">
+          <pre>{logs}</pre>
         </div>
       </div>
     </div>
