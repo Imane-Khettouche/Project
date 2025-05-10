@@ -31,10 +31,10 @@ const Team = sequelize.define("Team", {
     },}
 ,}, {
   timestamps: true,
-});
-Team.belongsTo(Challenge, { foreignKey: "challengeId", as: "challenge" });
-Challenge.hasMany(Team, { foreignKey: "challengeId", as: "teams" });
+});Team.belongsTo(Challenge, { foreignKey: "challengeId", as: "challenge" });
+Challenge.hasMany(Team, { foreignKey: "challengeId", as: "allTeams" }); // تغيير alias هنا ليكون "allTeams" لتجنب التعارض
 
-Team.belongsTo(User, { foreignKey: "leaderId", as: "leader" }); // Relationship with User (Leader)
-User.hasMany(Team, { foreignKey: "leaderId", as: "teams" }); // User can have many teams
+Team.belongsTo(User, { foreignKey: "leaderId", as: "leader" }); // العلاقة مع المستخدم (الزعيم)
+User.hasMany(Team, { foreignKey: "leaderId", as: "managedTeams" }); // تغيير alias هنا ليكون "managedTeams" لتجنب التعارض
+
 export default Team;

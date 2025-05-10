@@ -41,7 +41,7 @@ function ChallengesBar() {
     setShowChallenges(false);
   };
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl ">
          <h1 className="text-2xl font-bold mb-6 text-center">All Challenges</h1>
 
          {showChallenges && (
@@ -64,7 +64,7 @@ function ChallengesBar() {
 
                        <button
                          onClick={() => handleViewDetails(ch)}
-                         className="px-4 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700 transition duration-300">
+                         className="px-4 py-2 rounded-lg text-white font-medium bg-indigo-600 hover:bg-indigo-800 transition duration-300">
                          View Details
                        </button>
                      </div>

@@ -1,5 +1,8 @@
 import  { useState } from 'react';
-import { DashboardAd, ChallengeList, UserList, QuotesList } from "../index"; // Make sure the path is correct
+import  DashboardAd from"../dashboard/DashboardAd";
+import ChallengeList from "../challenges/ChallengesList";
+import  UserList from "../users/UserList";
+import QuotesList  from "../quote/QuoteList"; // Make sure the path is correct
 
 function Aside() {
   const [displayedContent, setDisplayedContent] = useState(null);

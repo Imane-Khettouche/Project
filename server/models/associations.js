@@ -1,43 +1,34 @@
-// associations.js
-import User from './User.js';
-import Challenge from './Challenge.js';
-import StudentChallenge from './StudentChallenge.js';
-import Solution from "./Solution.js"
+import User from "./User.js";
+import Challenge from "./Challenge.js";
+import StudentChallenge from "./StudentChallenge.js";
+import Solution from "./Solution.js";
+
+// 1. علاقة الأستاذ الذي أنشأ التحدي
 Challenge.belongsTo(User, { foreignKey: "professorID", as: "creator" });
 User.hasMany(Challenge, { foreignKey: "professorID", as: "createdChallenges" });
 
+// 2. علاقة الطالب بالتحدي (كثير إلى كثير)
 Challenge.belongsToMany(User, {
   through: StudentChallenge,
-  as: "students",
+  as: "studentsInChallenge",  // تعديل الاسم ليكون فريدًا
   foreignKey: "challengeId",
 });
 User.belongsToMany(Challenge, {
   through: StudentChallenge,
-  as: "joinedChallenges",
+  as: "joinedChallenges",  // تعديل الاسم ليكون فريدًا
   foreignKey: "studentId",
 });
-User.hasMany(Challenge, {foreignKey: "professorID", as: "createdChallenges"});
-Challenge.belongsTo(User, {foreignKey: "professorID", as: "creator"});
 
-User.belongsToMany(Challenge, {
-  through: StudentChallenge,
-  as: "joinedChallenges",
-  foreignKey: "studentId",
-});
-Challenge.belongsToMany(User, {
-  through: StudentChallenge,
-  as: "students",
-  foreignKey: "challengeId",
-});
+// 3. العلاقة بين Solution و Challenge
+Solution.belongsTo(Challenge, { foreignKey: "challengeId", as: "challenge" });
+Challenge.hasMany(Solution, { foreignKey: "challengeId", as: "solutions" });
 
-User.hasMany(Solution, {foreignKey: "studentId"});
-Solution.belongsTo(User, {foreignKey: "studentId", as: "student"});
+// 4. العلاقة بين Solution و User (الطالب)
+Solution.belongsTo(User, { foreignKey: "studentId", as: "student" });
+User.hasMany(Solution, { foreignKey: "studentId", as: "solutions" });
 
+// 5. العلاقة بين StudentChallenge و Challenge و User (لتحديث status)
+StudentChallenge.belongsTo(Challenge, { foreignKey: "challengeId", as: "challenge" });
+StudentChallenge.belongsTo(User, { foreignKey: "studentId", as: "student" });
 
-Solution.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
-User.hasMany(Solution, { foreignKey: 'studentId' });
-
-Solution.belongsTo(Challenge, { foreignKey: 'challengeId', as: 'challenge' });
-Challenge.hasMany(Solution, { foreignKey: 'challengeId' });
-
-export { User, Challenge, StudentChallenge };
+export { User, Challenge, StudentChallenge, Solution };

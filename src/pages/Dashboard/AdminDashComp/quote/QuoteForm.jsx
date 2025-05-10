@@ -1,4 +1,4 @@
-import useState from "react";
+import {useState} from "react";
 function QuoteForm() {
   const [quoteDes, setQuote] = useState("");
   const [owner, setOwner] = useState("");

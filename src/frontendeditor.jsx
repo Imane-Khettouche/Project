@@ -1,70 +1,104 @@
-import { useState } from "react";
+import {useState} from "react";
 import Editor from "@monaco-editor/react";
 
-export default function Code() {
-  const [html, setHtml] = useState("<h1>Hello</h1>");
-  const [css, setCss] = useState("h1 { color: red; }");
-  const [js, setJs] = useState("console.log('Hello from JS');");
-  const [activeEditor, setActiveEditor] = useState("html");
-  const [logs, setLogs] = useState("");
+export default function CodeCompiler() {
+  const [code, setCode] = useState("print('Bonjour le monde')");
+  const [output, setOutput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [language, setLanguage] = useState("python3");
 
-  const handleRunCode = async () => {
+  const handleRun = async () => {
+    setIsLoading(true);
+    setOutput("⏳ Exécution en cours...");
+
     try {
-      const response = await fetch("http://localhost:5000/api/run", {
+      const res = await fetch("http://localhost:5000/api/compiler", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: js, // You might want to handle the selected language here (html/css/js)
-          language: "javascript", // Adjust according to the selected language
-          versionIndex: "0",
-        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({code: code || "", language}),
       });
 
-      const result = await response.json();
-      setLogs(result.output || "No output");
-    } catch (error) {
-      console.error(error);
-      setLogs("Failed to execute code");
+      let data;
+      try {
+        data = await res.json();
+      } catch (jsonError) {
+        throw new Error(
+          "Erreur lors de l'analyse de la réponse du serveur",
+          jsonError
+        );
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || data.details || "La requête a échoué");
+      }
+
+      let resultMessage = `✅ Statut : ${data.status}\n\n`;
+      resultMessage += `📤 Sortie :\n${data.output || "Aucune sortie"}\n\n`;
+      if (data.time) resultMessage += `⏱️ Temps : ${data.time}\n`;
+      if (data.memory) resultMessage += `💾 Mémoire : ${data.memory}`;
+
+      setOutput(resultMessage);
+    } catch (err) {
+      setOutput(
+        `❌ Une erreur est survenue : ${err.message}\n\n🔌 Vérifiez votre connexion réseau ou le serveur.`
+      );
+      console.error("Erreur d'exécution :", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="p-4 m-10">
-      <div className="flex justify-end space-x-2">
-        {["html", "css", "js"].map((type) => (
-          <button
-            key={type}
-            onClick={() => setActiveEditor(type)}
-            className={`px-3 border rounded-t-lg ${
-              activeEditor === type ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}>
-            {type.toUpperCase()}
-          </button>
-        ))}
+    <div className="p-6 max-w-5xl mx-auto bg-gradient-to-r from-indigo-700 via-indigo-400 to-indigo-100 rounded-lg text-white shadow-lg">
+      <div className="mb-6">
+        <label className="block text-sm font-semibold text-white mb-2">
+          Choisissez un langage :
+        </label>
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          className="block w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="python3">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+        </select>
       </div>
 
-      {activeEditor === "html" && (
-        <Editor height="200px" language="html" value={html} onChange={setHtml} theme="vs-dark" />
-      )}
-      {activeEditor === "css" && (
-        <Editor height="200px" language="css" value={css} onChange={setCss} theme="vs-dark" />
-      )}
-      {activeEditor === "js" && (
-        <Editor height="200px" language="javascript" value={js} onChange={setJs} theme="vs-dark" />
-      )}
+      <Editor
+        height="400px"
+        theme="vs-dark"
+        language={language === "cpp" ? "cpp" : language}
+        value={code}
+        onChange={(value) => setCode(value || "")}
+        options={{
+          minimap: {enabled: false},
+          fontSize: 16,
+          automaticLayout: true,
+          lineNumbers: "on",
+          scrollBeyondLastLine: false,
+        }}
+      />
 
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={handleRunCode}
-          className="px-4 py-2 bg-green-600 text-white rounded shadow">
-          Run JS Code
-        </button>
-      </div>
+      <button
+        onClick={handleRun}
+        disabled={isLoading}
+        className={`mt-6 w-full p-4 text-white rounded-lg ${
+          isLoading
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 transition duration-200 ease-in-out transform hover:scale-105"
+        }`}>
+        {isLoading ? "Exécution..." : "Exécuter le code"}
+      </button>
 
-      <div className="mt-4 border rounded overflow-hidden">
-        <div className="bg-white p-4" title="Output">
-          <pre>{logs}</pre>
-        </div>
+      <div className="mt-6 p-4 rounded-lg bg-gray-800 shadow-md">
+        <strong className="text-xl mb-2">Résultat :</strong>
+        <pre className="font-mono text-sm text-white whitespace-pre-wrap">
+          {output}
+        </pre>
       </div>
     </div>
   );

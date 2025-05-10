@@ -11,8 +11,9 @@ import ChallengeRouter from "./routes/challenge.js";
 import InviteRouter from "./routes/invitation.js";
 import StudentChallengeRouter from "./routes/StudentChallenge.js";
 import SolutionRouter from "./routes/solution.js";
-import jdoodleRouter from "./routes/jdoodle.js";
+import judge0Router from "./routes/judge0.js";
 import TeamRouter from "./routes/team.js";
+import StatRouter from "./routes/stat.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,10 +55,10 @@ app.use("/api/solutions", SolutionRouter);
 //team
 app.use("/api/team", TeamRouter);
 
-
 // Use the JDoodle router
-app.use("/api", jdoodleRouter);
-
+app.use("/api/compiler", judge0Router);
+//stat
+app.use("/api/stats", StatRouter);
 // Synchronize the database
 async function syncDatabase() {
   try {

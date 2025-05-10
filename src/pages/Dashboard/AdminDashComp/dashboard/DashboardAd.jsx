@@ -1,4 +1,5 @@
-import{ Aside ,Profile}from "../";
+import Aside from "../aside/Aside"
+import Profile from "../profile/Profile";
 
 
 function DashboardAd() {

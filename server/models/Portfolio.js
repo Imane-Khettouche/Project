@@ -1,4 +1,4 @@
-import {DataTypes, Model} from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "../db.js";
 import User from "./User.js";
 
@@ -23,17 +23,26 @@ Portfolio.init(
     privateSection: {
       type: DataTypes.TEXT,
       allowNull: false,
+      defaultValue: "This is my portfolio. More details coming soon.", // Default placeholder text
     },
     nickname: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
+      defaultValue: "Student", // Default nickname for students
     },
     skills: {
-      type: DataTypes.JSON, // Change to JSON type
-      defaultValue: [], // Default to empty array
+      type: DataTypes.JSON,
+      defaultValue: [
+        "JavaScript",
+        "React",
+        "HTML",
+        "CSS",
+        "Node.js",
+        "Git",
+      ], // Default skills
     },
     socialLinks: {
-      type: DataTypes.JSON, // Change to JSON type
+      type: DataTypes.JSON,
       defaultValue: [], // Default to empty array
     },
   },

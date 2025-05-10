@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 import DashboardPr from "./DashboardPr";
 import AddChallenge from "../challenges/ChallengesAdd";
 import ChallengesList from "../challenges/ChallengeList";
-import SolutionEvaluation from "../solution/SolutionEvaluation";
+import SolutionEvaluation from "../solution/solutionEvaluation";
 import SolutionReview from "../solution/SolutionsReview";
 import Profile from "../profile/Profile";
+
 function MainContent({displayedContent}) {
   const renderContent = () => {
     switch (displayedContent?.key) {
@@ -17,23 +18,32 @@ function MainContent({displayedContent}) {
       case "ChallengeList":
         return <ChallengesList />;
       case "solution":
-        return (
-          <SolutionEvaluation
-          />
-        );
+        return <SolutionEvaluation />;
       case "solutionsReview":
         return <SolutionReview />;
       case "profile":
         return <Profile />;
+      case "studentSolution":
+        return (
+          <SolutionEvaluation
+            studentId={displayedContent?.props?.selectedStudentId}
+            challengeId={displayedContent?.props?.challengeId}
+            handleBackClick={displayedContent?.props?.handleBackClick}
+          />
+        );
       case "help":
         return <p>Help Section</p>;
       default:
-        return <p data-testid="fallback-message">Select an option from the menu</p>;
+        return (
+          <p data-testid="fallback-message">Select an option from the menu</p>
+        );
     }
   };
 
   return (
-    <main className="flex-1 p-6 bg-gray-50" data-testid="main-content">
+    <main
+      className="flex-1"
+      data-testid="main-content">
       {renderContent()}
     </main>
   );

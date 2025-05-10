@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 import {useUser} from "../../../UserContext";
-import ListOfStudent from "../../ProfessorDashComp/solution/ListOfStudent";
 import Solution from "../solution/Solution";
 
 function JoinToChallenge({challenge}) {
@@ -109,8 +108,7 @@ function JoinToChallenge({challenge}) {
             List of Students Who Joined:
           </h1>
           <ul>
-            <ListOfStudent challengeId={challenge.id} />
-          </ul>
+         </ul>
         </>
       ) : (
         <p className="mt-4 text-gray-500">Please log in to view challenges.</p>

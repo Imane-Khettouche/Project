@@ -42,4 +42,5 @@ const StudentChallenge = sequelize.define(
   }
 );
 
+
 export default StudentChallenge;

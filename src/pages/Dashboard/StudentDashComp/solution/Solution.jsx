@@ -57,6 +57,39 @@ const Solution = ({challenge}) => {
       alert(`Failed to submit solution: ${err.message}`);
     }
   };
+  const handleStatus = async (studentId, challengeId, status) => {
+    try {
+      // Send a PUT request to update the status of the student's challenge
+      const response = await fetch(
+        "http://localhost:5000/api/studentChallenges/updateStatus",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId, // The ID of the student submitting the solution
+            challengeId, // The ID of the challenge
+            status, // The new status (e.g., "completed")
+          }),
+        }
+      );
+
+      // Check if the response is successful
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to update status: ${errorText}`);
+      }
+
+      const responseData = await response.json();
+      console.log("Status updated successfully:", responseData);
+
+      return responseData.message;
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error updating status: ${err.message}`);
+    }
+  };
 
   if (!challenge) {
     return (
@@ -83,6 +116,7 @@ const Solution = ({challenge}) => {
         />
         <button
           type="submit"
+          onClick={handleStatus}
           className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">
           Submit Solution
         </button>
